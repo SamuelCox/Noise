@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace NoiseDB
 {
@@ -15,6 +16,11 @@ namespace NoiseDB
         }
 
         public void ConnectToDataStore(string networkPath)
+        {
+            TcpClient tcpConnection = new TcpClient();
+        }
+
+        public void AcceptConnection()
         {
 
         }

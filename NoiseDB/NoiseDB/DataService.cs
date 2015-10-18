@@ -10,6 +10,21 @@ namespace NoiseDB
     {
         public DataService()
         {
+           
+        }
+
+        public void GetRow(string key)
+        {
+
+        }
+
+        public void SetValue(string key, object value)
+        {
+
+        }
+
+        public void GetAllRows()
+        {
 
         }
     }
