@@ -8,5 +8,25 @@ namespace NoiseDB
 {
     class QueryService
     {
+
+        public QueryService()
+        {
+
+        }
+
+        public void ConstructQuery(string queryString)
+        {
+
+        }
+
+        public void ExecuteQuery(string queryString)
+        {
+
+        }
+
+        public void AddParametersToString(string queryString)
+        {
+
+        }
     }
 }

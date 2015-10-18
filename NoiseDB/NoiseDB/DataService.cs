@@ -8,5 +8,9 @@ namespace NoiseDB
 {
     class DataService
     {
+        public DataService()
+        {
+
+        }
     }
 }
