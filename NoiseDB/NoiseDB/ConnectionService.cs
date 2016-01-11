@@ -22,7 +22,7 @@ namespace NoiseDB
 
         public void AcceptConnection()
         {
-
+            TcpListener listener = new TcpListener(4044);
         }
 
     }

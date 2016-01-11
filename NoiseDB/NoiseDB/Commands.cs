@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace NoiseDB
 {
-    class Commands
+    public enum Commands
     {
+        GET = "GET",
+        SET = "SET"
     }
 }

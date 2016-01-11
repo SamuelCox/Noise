@@ -16,7 +16,14 @@ namespace NoiseDB
 
         public void ConstructQuery(string queryString)
         {
-
+            string[] query = queryString.Split(' ');
+            string command = query[0];
+            string argument = query[1];
+            string value;
+            if(command == Commands.SET.ToString())
+            {
+                value = query[2];
+            }
         }
 
         public void ExecuteQuery(string queryString)
