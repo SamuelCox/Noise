@@ -1,22 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NoiseDB
 {
-    class BinarySerialisableDictionary<TKey, TValue> : Dictionary<TKey, TValue>
+    [Serializable]
+    public class BinarySerializableDictionary<TKey, TValue> : Dictionary<TKey, string>
     {
 
-        public static bool Serialise()
+        public BinarySerializableDictionary()
         {
+
+        }
+
+        protected BinarySerializableDictionary(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            
+        }
+
+        public static bool Serialize(Dictionary<TKey, TValue> dictionary)
+        {
+            BinaryFormatter bfw = new BinaryFormatter();
+            using (FileStream stream = new FileStream(@"C:\Users\Noiiise\Desktop\desktopshit\dict.bin", FileMode.Create))
+            {
+                bfw.Serialize(stream, dictionary);
+            }
             return true;
         }
 
-        public static BinarySerialisableDictionary<TKey, TValue> Deserialise()
+        public static BinarySerializableDictionary<TKey, TValue> Deserialize()
         {
-            return null;
+            BinaryFormatter bfw = new BinaryFormatter();
+            BinarySerializableDictionary<TKey, TValue> dict = new BinarySerializableDictionary<TKey,TValue>();
+            using (FileStream stream = new FileStream(@"C:\Users\Noiiise\Desktop\desktopshit\dict.bin", FileMode.Open))
+            {
+                dict = (BinarySerializableDictionary<TKey, TValue>) bfw.Deserialize(stream);
+            }
+            return dict;
         }
     }
 }

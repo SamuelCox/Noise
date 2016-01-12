@@ -6,34 +6,44 @@ using System.Threading.Tasks;
 
 namespace NoiseDB
 {
-    class QueryService
+    public class QueryService
     {
+        private IDataService dataService;
+        public Commands CurrentCommand { get; private set; }
+        public string CurrentArgument { get; private set; }
+        public string CurrentValue { get; private set; }
 
-        public QueryService()
+        public QueryService(IDataService dataService)
         {
-
+            this.dataService = dataService;
         }
 
         public void ConstructQuery(string queryString)
         {
-            string[] query = queryString.Split(' ');
-            string command = query[0];
-            string argument = query[1];
-            string value;
-            if(command == Commands.SET.ToString())
+            string[] query = queryString.Split(',');
+            CurrentCommand = (Commands)Enum.Parse(typeof(Commands), query[0]);
+            CurrentArgument = query[1];
+            if(query[2] == Commands.SET.ToString())
             {
-                value = query[2];
+                CurrentValue = query[2];
             }
         }
 
-        public void ExecuteQuery(string queryString)
+        public string ExecuteQuery()
         {
-
+            switch(CurrentCommand)
+            {
+                case Commands.GET:
+                    return dataService.GetRow(CurrentArgument);
+                case Commands.SET:
+                    return dataService.SetValue(CurrentArgument, CurrentValue).ToString();                    
+                case Commands.DELETE:
+                    return dataService.DeleteRow(CurrentArgument).ToString();                   
+                default:
+                    return "Unrecognised command";                
+            }
         }
 
-        public void AddParametersToString(string queryString)
-        {
-
-        }
+        
     }
 }

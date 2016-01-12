@@ -7,7 +7,7 @@ using System.Net.Sockets;
 
 namespace NoiseDB
 {
-    class ConnectionService
+    public class ConnectionService
     {
 
         public ConnectionService()

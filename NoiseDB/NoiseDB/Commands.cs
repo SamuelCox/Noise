@@ -8,7 +8,8 @@ namespace NoiseDB
 {
     public enum Commands
     {
-        GET = "GET",
-        SET = "SET"
+        GET,
+        SET,
+        DELETE
     }
 }

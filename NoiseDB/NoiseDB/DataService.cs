@@ -6,21 +6,28 @@ using System.Threading.Tasks;
 
 namespace NoiseDB
 {
-    class DataService
+    public class DataService : IDataService
     {
+        private BinarySerializableDictionary<string, BinarySerializableDictionary<string, string>> KeyValueStore { get; set;}
+
         public DataService()
         {
            
         }
 
-        public void GetRow(string key)
+        public string GetRow(string key)
         {
-
+            return null;
         }
 
-        public void SetValue(string key, object value)
+        public bool SetValue(string key, object value)
         {
+            return false;
+        }
 
+        public bool DeleteRow(string key)
+        {
+            return false;
         }
 
         public void GetAllRows()

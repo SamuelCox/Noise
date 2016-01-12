@@ -13,12 +13,12 @@ namespace NoiseDB
 
         }
 
-        public void OutputHashMapToDisk(BinarySerialisableDictionary<string, object> hashMap)
+        public void OutputDictionaryToDisk(BinarySerializableDictionary<string, object> dictionary)
         {
 
         }
 
-        public BinarySerialisableDictionary<string, object> ReadHashMapFromFile(string path)
+        public BinarySerializableDictionary<string, object> ReadDictionaryFromFile(string path)
         {
             return null;
         }

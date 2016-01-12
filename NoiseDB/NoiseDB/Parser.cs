@@ -6,16 +6,9 @@ using System.Threading.Tasks;
 
 namespace NoiseDB
 {
-    class Parser
+    public class Parser
     {
-        
-        
         public Parser()
-        {
-            
-        }
-
-        public void ParseQueryString(string query)
         {
 
         }
