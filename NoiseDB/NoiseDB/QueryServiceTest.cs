@@ -21,12 +21,43 @@ namespace NoiseDB
         public void TestConstructQuery(string testQuery)
         {
             QueryService queryService = new QueryService(null);
-            queryService.ConstructQuery(testQuery);
+            Query query = queryService.ConstructQuery(testQuery);
             string[] queryParts = testQuery.Split(',');
-            Assert.AreEqual(queryService.CurrentCommand, queryParts[0]);
-            Assert.AreEqual(queryService.CurrentArgument, queryParts[1]);
-            Assert.AreEqual(queryService.CurrentValue, queryParts[2]);
+            Assert.AreEqual(query.Command, queryParts[0]);
+            Assert.AreEqual(query.Key, queryParts[1]);
+            Assert.AreEqual(query.Argument, queryParts[2]);
             
+        }
+
+        [TestCaseSource("GetExecuteTestCases")]
+        [Test]
+        public void TestExecuteQuery(Query query)
+        {
+            QueryService queryService = new QueryService(new MockDataService());
+            string queryResult = queryService.ExecuteQuery(query);
+            if (query.Command == Commands.GET)
+            {
+                Assert.AreEqual(queryResult, string.Empty);
+            }
+            else if(query.Command == Commands.SET) 
+            {
+                Assert.AreEqual(queryResult, "true");
+            }
+            else
+            {
+                Assert.AreEqual(queryResult, "true");
+            }
+
+        }
+
+        public IEnumerable<Query> GetExecuteTestCases
+        {
+            get
+            {
+                yield return new Query(Commands.GET, "USERS:1000", string.Empty);
+                yield return new Query(Commands.SET, "PRODUCTS:100", "Visual Studio");
+                yield return new Query(Commands.DELETE, "PRODUCTS:100", string.Empty);
+            }
         }
 
 

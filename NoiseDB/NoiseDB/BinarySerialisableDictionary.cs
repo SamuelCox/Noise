@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace NoiseDB
 {
@@ -23,10 +24,10 @@ namespace NoiseDB
             
         }
 
-        public static bool Serialize(Dictionary<TKey, TValue> dictionary)
+        public static bool Serialize(Dictionary<TKey, TValue> dictionary, string filepath)
         {
             BinaryFormatter bfw = new BinaryFormatter();
-            using (FileStream stream = new FileStream(@"C:\Users\Noiiise\Desktop\desktopshit\dict.bin", FileMode.Create))
+            using (FileStream stream = new FileStream(filepath, FileMode.Create))
             {
                 bfw.Serialize(stream, dictionary);
             }

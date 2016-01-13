@@ -9,36 +9,39 @@ namespace NoiseDB
     public class QueryService
     {
         private IDataService dataService;
-        public Commands CurrentCommand { get; private set; }
-        public string CurrentArgument { get; private set; }
-        public string CurrentValue { get; private set; }
-
+        
         public QueryService(IDataService dataService)
         {
             this.dataService = dataService;
         }
 
-        public void ConstructQuery(string queryString)
+
+        public Query ConstructQuery(string queryString)
         {
             string[] query = queryString.Split(',');
-            CurrentCommand = (Commands)Enum.Parse(typeof(Commands), query[0]);
-            CurrentArgument = query[1];
-            if(query[2] == Commands.SET.ToString())
+            Commands queryCommand = (Commands)Enum.Parse(typeof(Commands), query[0]);
+            string queryKey = query[1];
+            string argument = string.Empty;
+            if(queryCommand == Commands.SET)
             {
-                CurrentValue = query[2];
+                if (query.Count() == 3)
+                {
+                    argument = query[2];
+                }
             }
+            return new Query(queryCommand, queryKey, argument);
         }
 
-        public string ExecuteQuery()
+        public string ExecuteQuery(Query query)
         {
-            switch(CurrentCommand)
+            switch(query.Command)
             {
                 case Commands.GET:
-                    return dataService.GetRow(CurrentArgument);
+                    return dataService.GetRow(query.Key);
                 case Commands.SET:
-                    return dataService.SetValue(CurrentArgument, CurrentValue).ToString();                    
+                    return dataService.SetValue(query.Key, query.Argument).ToString();                    
                 case Commands.DELETE:
-                    return dataService.DeleteRow(CurrentArgument).ToString();                   
+                    return dataService.DeleteRow(query.Key).ToString();                   
                 default:
                     return "Unrecognised command";                
             }

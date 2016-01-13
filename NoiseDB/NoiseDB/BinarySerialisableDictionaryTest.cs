@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using System.Configuration;
 namespace NoiseDB
 {
     
@@ -21,10 +22,11 @@ namespace NoiseDB
         {
             BinarySerializableDictionary<string, string> dict = new BinarySerializableDictionary<string, string>();
             dict.Add("hi", "yes");
-            BinarySerializableDictionary<string, string>.Serialize(dict);
+            string filePath = ConfigurationManager.AppSettings["DataStoreFilePath"];
+            BinarySerializableDictionary<string, string>.Serialize(dict, filePath + @"\dict.bin");
             FileAssert.Exists(@"C:\Users\Noiiise\Desktop\desktopshit\dict.bin");
         }
-
+        
         [Test]
         public void TestDeserialize()
         {

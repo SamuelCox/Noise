@@ -8,6 +8,7 @@ namespace NoiseDB
 {
     public interface IDataService
     {
+
         string GetRow(string key);
         
 
