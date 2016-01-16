@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NoiseDB
 {
-    class DiskService
+    public class DiskService
     {
         public DiskService()
         {

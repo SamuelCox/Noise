@@ -13,27 +13,27 @@ namespace NoiseDB
 
         }
 
-        public string GetRow(string key)
+        public QueryResult GetRow(string key)
         {
-            return string.Empty;
+            return new QueryResult("GetSuccess",null,null);
         }
 
 
-        public bool SetValue(string key, object value)
+        public QueryResult SetValue(string key, object value)
         {
-            return true;
+            return new QueryResult("SetSuccess", null, null);
         }
 
 
-        public bool DeleteRow(string key)
+        public QueryResult DeleteRow(string key)
         {
-            return true;
+            return new QueryResult("DeleteSuccess", null, null);
         }
 
 
-        public void GetAllRows()
+        public QueryResult GetAllRows(string key)
         {
-
+            return null;
         }
         
 

@@ -9,16 +9,16 @@ namespace NoiseDB
     public interface IDataService
     {
 
-        string GetRow(string key);
+        QueryResult GetRow(string key);
         
 
-        bool SetValue(string key, object value);
+        QueryResult SetValue(string key, object value);
         
 
-        bool DeleteRow(string key);
+        QueryResult DeleteRow(string key);
         
 
-        void GetAllRows();
+        QueryResult GetAllRows(string key);
         
 
         

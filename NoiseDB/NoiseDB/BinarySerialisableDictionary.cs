@@ -11,7 +11,7 @@ using System.Configuration;
 namespace NoiseDB
 {
     [Serializable]
-    public class BinarySerializableDictionary<TKey, TValue> : Dictionary<TKey, string>
+    public class BinarySerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>
     {
 
         public BinarySerializableDictionary()

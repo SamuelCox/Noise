@@ -12,7 +12,7 @@ namespace NoiseDB
         {
            while(true)
            {
-               new QueryService(new DataService()).ConstructQuery(Console.ReadLine());
+               new QueryService(new DataService(new DiskService())).ConstructQuery(Console.ReadLine());
            }
             
         }

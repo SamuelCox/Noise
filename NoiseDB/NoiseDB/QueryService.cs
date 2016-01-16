@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NoiseDB
 {
-    public class QueryService
+    public class QueryService : IQueryService
     {
         private IDataService dataService;
         
@@ -32,18 +32,18 @@ namespace NoiseDB
             return new Query(queryCommand, queryKey, argument);
         }
 
-        public string ExecuteQuery(Query query)
+        public QueryResult ExecuteQuery(Query query)
         {
             switch(query.Command)
             {
                 case Commands.GET:
                     return dataService.GetRow(query.Key);
                 case Commands.SET:
-                    return dataService.SetValue(query.Key, query.Argument).ToString();                    
+                    return dataService.SetValue(query.Key, query.Argument);                    
                 case Commands.DELETE:
-                    return dataService.DeleteRow(query.Key).ToString();                   
+                    return dataService.DeleteRow(query.Key);                   
                 default:
-                    return "Unrecognised command";                
+                    return new QueryResult("Unrecognised command", null, null);                
             }
         }
 

@@ -34,18 +34,18 @@ namespace NoiseDB
         public void TestExecuteQuery(Query query)
         {
             QueryService queryService = new QueryService(new MockDataService());
-            string queryResult = queryService.ExecuteQuery(query);
+            QueryResult queryResult = queryService.ExecuteQuery(query);
             if (query.Command == Commands.GET)
             {
-                Assert.AreEqual(queryResult, string.Empty);
+                Assert.AreEqual(queryResult.ResultMessage, "GetSuccess");
             }
             else if(query.Command == Commands.SET) 
             {
-                Assert.AreEqual(queryResult, "true");
+                Assert.AreEqual(queryResult.ResultMessage, "SetSuccess");
             }
             else
             {
-                Assert.AreEqual(queryResult, "true");
+                Assert.AreEqual(queryResult.ResultMessage, "DeleteSuccess");
             }
 
         }

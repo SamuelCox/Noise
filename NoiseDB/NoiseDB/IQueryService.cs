@@ -10,7 +10,7 @@ namespace NoiseDB
     {
         Query ConstructQuery(string query);
 
-        string ExecuteQuery();
+        QueryResult ExecuteQuery(Query query);
 
     }
 }
