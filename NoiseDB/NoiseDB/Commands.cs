@@ -10,6 +10,8 @@ namespace NoiseDB
     {
         GET,
         SET,
-        DELETE
+        DELETE,
+        SERVER_START,
+        SERVER_STOP
     }
 }

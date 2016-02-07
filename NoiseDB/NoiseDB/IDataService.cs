@@ -12,13 +12,13 @@ namespace NoiseDB
         QueryResult GetRow(string key);
         
 
-        QueryResult SetValue(string key, object value);
+        QueryResult SetValue(string key, string value);
         
 
         QueryResult DeleteRow(string key);
         
 
-        QueryResult GetAllRows(string key);
+        
         
 
         

@@ -13,14 +13,22 @@ namespace NoiseDB
 
         }
 
-        public void OutputDictionaryToDisk(BinarySerializableDictionary<string, object> dictionary)
+        public bool OutputDictionaryToDisk(BinarySerializableDictionary<string, string> dictionary, string path)
         {
-
+            try
+            {
+                BinarySerializableDictionary<string, string>.Serialize(dictionary, path);
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
         }
 
-        public BinarySerializableDictionary<string, object> ReadDictionaryFromFile(string path)
+        public BinarySerializableDictionary<string, string> ReadDictionaryFromFile(string path)
         {
-            return null;
+            return BinarySerializableDictionary<string, string>.Deserialize(path);
         }
     }
 }

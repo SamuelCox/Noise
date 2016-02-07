@@ -19,7 +19,7 @@ namespace NoiseDB
         }
 
 
-        public QueryResult SetValue(string key, object value)
+        public QueryResult SetValue(string key, string value)
         {
             return new QueryResult("SetSuccess", null, null);
         }

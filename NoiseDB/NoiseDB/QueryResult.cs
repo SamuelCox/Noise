@@ -19,5 +19,17 @@ namespace NoiseDB
             RetrievedData = retrievedData;
         }
 
+        public override string ToString()
+        {
+            if(ResultMessage == "Success")
+            {
+                return ResultMessage + RetrievedData.ToString();
+            }
+            else
+            {
+                return ResultMessage + " with Exception : " + ThrownException.ToString();
+            }
+        }
+
     }
 }

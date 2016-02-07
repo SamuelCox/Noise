@@ -8,36 +8,48 @@ namespace NoiseDB
 {
     public class DataService : IDataService
     {
-        private BinarySerializableDictionary<string, BinarySerializableDictionary<string, string>> KeyValueStore { get; set; }
+        private BinarySerializableDictionary<string, string> KeyValueStore { get; set; }
         private DiskService DiskService { get; set; }
         
 
         public DataService(DiskService diskService)
         {
             DiskService = diskService;
-            KeyValueStore = new BinarySerializableDictionary<string, BinarySerializableDictionary<string, string>>();
+            KeyValueStore = new BinarySerializableDictionary<string, string>();
         }
 
         public QueryResult GetRow(string key)
         {
-            return null;
+
+            string result;
+            QueryResult queryResult;
+            try
+            {
+                result = KeyValueStore[key];
+            }
+            catch(Exception e)
+            {
+                queryResult = new QueryResult("Failed", e, null);
+                return queryResult;
+            }
+            List<string> results = new List<string>();
+            results.Add(result);
+            queryResult = new QueryResult("Success", null, results);
+            return queryResult;
         }
 
-        public QueryResult SetValue(string key, object value)
+        public QueryResult SetValue(string key, string value)
         {
-            return null;
+            KeyValueStore[key] = value;
+            return new QueryResult("Success",null,null);
         }
 
         public QueryResult DeleteRow(string key)
         {
-            return null;
+            KeyValueStore[key] = null;
+            return new QueryResult("Success", null, null);
         }
 
-        public QueryResult GetAllRows(string key)
-        {
-            BinarySerializableDictionary<string, string> SingleTable = KeyValueStore[key];
-            return new QueryResult("Success", null, SingleTable.Values.ToList<string>());
-            
-        }
+       
     }
 }

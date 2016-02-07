@@ -34,11 +34,11 @@ namespace NoiseDB
             return true;
         }
 
-        public static BinarySerializableDictionary<TKey, TValue> Deserialize()
+        public static BinarySerializableDictionary<TKey, TValue> Deserialize(string path)
         {
             BinaryFormatter bfw = new BinaryFormatter();
             BinarySerializableDictionary<TKey, TValue> dict = new BinarySerializableDictionary<TKey,TValue>();
-            using (FileStream stream = new FileStream(@"C:\Users\Noiiise\Desktop\desktopshit\dict.bin", FileMode.Open))
+            using (FileStream stream = new FileStream(path, FileMode.Open))
             {
                 dict = (BinarySerializableDictionary<TKey, TValue>) bfw.Deserialize(stream);
             }

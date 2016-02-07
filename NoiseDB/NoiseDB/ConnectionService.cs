@@ -20,7 +20,7 @@ namespace NoiseDB
             TcpClient tcpConnection = new TcpClient();
         }
 
-        public void AcceptConnection()
+        public void ListenForConnection()
         {
             TcpListener listener = new TcpListener(4044);
         }
