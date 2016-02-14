@@ -23,7 +23,7 @@ namespace NoiseDB
         {
             if(ResultMessage == "Success")
             {
-                return ResultMessage + RetrievedData.ToString();
+                return ResultMessage + (RetrievedData == null  ? string.Empty : RetrievedData.ToString());
             }
             else
             {

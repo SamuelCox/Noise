@@ -50,7 +50,9 @@
     <Compile Include="Commands.cs" />
     <Compile Include="ConnectionService.cs" />
     <Compile Include="DataService.cs" />
+    <Compile Include="DataServiceTest.cs" />
     <Compile Include="DiskService.cs" />
+    <Compile Include="DiskServiceTest.cs" />
     <Compile Include="IDataService.cs" />
     <Compile Include="IQueryService.cs" />
     <Compile Include="MockDataService.cs" />
