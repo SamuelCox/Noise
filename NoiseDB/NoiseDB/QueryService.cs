@@ -8,19 +8,22 @@ namespace NoiseDB
 {
     public class QueryService : IQueryService
     {
-        private IDataService dataService;
-        
-        public QueryService(IDataService dataService)
+        private IDataService DataService;
+        private ConnectionService ConnectionService;
+
+        public QueryService(IDataService dataService, ConnectionService connectionService)
         {
-            this.dataService = dataService;
+            DataService = dataService;
+            ConnectionService = connectionService;
         }
 
 
         public Query ConstructQuery(string queryString)
         {
             string[] query = queryString.Split(',');
-            Commands queryCommand = (Commands)Enum.Parse(typeof(Commands), query[0]);
-            string queryKey = query[1];
+            Commands queryCommand = Commands.UNKNOWN;
+            Enum.TryParse<Commands>(query[0], true, out queryCommand);
+            string queryKey = query.Count() > 1 ? query[1] : null;
             string argument = string.Empty;
             if(queryCommand == Commands.SET)
             {
@@ -29,7 +32,8 @@ namespace NoiseDB
                     argument = query[2];
                 }
             }
-            return new Query(queryCommand, queryKey, argument);
+            
+            return new Query(queryCommand, queryKey, argument);  
         }
 
         public QueryResult ExecuteQuery(Query query)
@@ -37,11 +41,14 @@ namespace NoiseDB
             switch(query.Command)
             {
                 case Commands.GET:
-                    return dataService.GetRow(query.Key);
+                    return DataService.GetRow(query.Key);
                 case Commands.SET:
-                    return dataService.SetValue(query.Key, query.Argument);                    
+                    return DataService.SetValue(query.Key, query.Argument);                    
                 case Commands.DELETE:
-                    return dataService.DeleteRow(query.Key);                   
+                    return DataService.DeleteRow(query.Key);
+                case Commands.SERVER_START:
+                    return ConnectionService.ListenForConnection();
+                case Commands.SERVER_STOP:
                 default:
                     return new QueryResult("Unrecognised command", null, null);                
             }

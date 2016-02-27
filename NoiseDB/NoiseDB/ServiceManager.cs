@@ -22,8 +22,8 @@ namespace NoiseDB
         {
             DiskService = new DiskService();
             DataService = new DataService(DiskService);
-            QueryService = new QueryService(DataService);
             ConnectionService = new ConnectionService();
+            QueryService = new QueryService(DataService, ConnectionService);            
 
         }
     }

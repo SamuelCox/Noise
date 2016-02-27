@@ -8,10 +8,12 @@ namespace NoiseDB
 {
     public enum Commands
     {
-        GET,
-        SET,
-        DELETE,
-        SERVER_START,
-        SERVER_STOP
+        UNKNOWN = 0,
+        GET = 1,
+        SET = 2,
+        DELETE = 3,
+        SERVER_START = 4,
+        SERVER_STOP = 5,
+        
     }
 }

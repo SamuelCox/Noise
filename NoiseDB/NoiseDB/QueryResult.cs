@@ -21,13 +21,22 @@ namespace NoiseDB
 
         public override string ToString()
         {
-            if(ResultMessage == "Success")
+            StringBuilder stringBuilder = new StringBuilder(ResultMessage);
+            if(ThrownException == null)
             {
-                return ResultMessage + (RetrievedData == null  ? string.Empty : RetrievedData.ToString());
+                if (RetrievedData != null)
+                {
+                    foreach (string data in RetrievedData)
+                    {
+                        stringBuilder.Append(" " + data);
+                    }
+                }
+                return stringBuilder.ToString();
             }
             else
-            {
-                return ResultMessage + " with Exception : " + ThrownException.ToString();
+            {                
+                stringBuilder.Append(" with Exception : " + ThrownException.ToString());
+                return stringBuilder.ToString();
             }
         }
 

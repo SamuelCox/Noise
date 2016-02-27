@@ -10,7 +10,7 @@ namespace NoiseDB
     {
         static void Main(string[] args)
         {
-            QueryService queryService = new QueryService(new DataService(new DiskService()));
+            QueryService queryService = new QueryService(new DataService(new DiskService()), new ConnectionService());
             string input = null;
             while (true)
             {

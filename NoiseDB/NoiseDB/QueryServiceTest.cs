@@ -20,7 +20,7 @@ namespace NoiseDB
         [Test]
         public void TestConstructQuery(string testQuery)
         {
-            QueryService queryService = new QueryService(null);
+            QueryService queryService = new QueryService(new MockDataService(),null);
             Query query = queryService.ConstructQuery(testQuery);
             string[] queryParts = testQuery.Split(',');
             Assert.AreEqual(query.Command, queryParts[0]);
@@ -33,7 +33,7 @@ namespace NoiseDB
         [Test]
         public void TestExecuteQuery(Query query)
         {
-            QueryService queryService = new QueryService(new MockDataService());
+            QueryService queryService = new QueryService(new MockDataService(), null);
             QueryResult queryResult = queryService.ExecuteQuery(query);
             if (query.Command == Commands.GET)
             {
