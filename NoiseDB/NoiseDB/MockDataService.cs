@@ -30,10 +30,14 @@ namespace NoiseDB
             return new QueryResult("DeleteSuccess", null, null);
         }
 
-
-        public QueryResult GetAllRows(string key)
+        public QueryResult SaveStore(string path)
         {
-            return null;
+            return new QueryResult("SaveSuccess", null, null);
+        }
+
+        public QueryResult LoadStore(string name)
+        {
+            return new QueryResult("LoadSuccess", null, null);
         }
         
 

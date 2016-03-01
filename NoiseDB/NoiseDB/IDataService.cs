@@ -16,6 +16,10 @@ namespace NoiseDB
         
 
         QueryResult DeleteRow(string key);
+
+        QueryResult SaveStore(string name);
+
+        QueryResult LoadStore(string name);
         
 
         

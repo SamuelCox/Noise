@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace NoiseDB
 {
@@ -23,14 +24,13 @@ namespace NoiseDB
 
             string result;
             QueryResult queryResult;
-            try
+            if(!string.IsNullOrEmpty(key) && KeyValueStore.ContainsKey(key))
             {
                 result = KeyValueStore[key];
             }
-            catch(Exception e)
+            else 
             {
-                queryResult = new QueryResult("Failed", e, null);
-                return queryResult;
+                return new QueryResult("Failed", new KeyNotFoundException(), null);
             }
             List<string> results = new List<string>();
             results.Add(result);
@@ -40,14 +40,56 @@ namespace NoiseDB
 
         public QueryResult SetValue(string key, string value)
         {
-            KeyValueStore[key] = value;
-            return new QueryResult("Success",null,null);
+            if (!string.IsNullOrEmpty(key))
+            {
+                KeyValueStore[key] = value;
+
+                return new QueryResult("Success", null, null);
+            }
+            else 
+            {
+                return new QueryResult("Failed", new KeyNotFoundException(), null);
+            }
         }
 
         public QueryResult DeleteRow(string key)
         {
-            KeyValueStore[key] = null;
-            return new QueryResult("Success", null, null);
+            if (!string.IsNullOrEmpty(key))
+            {
+                KeyValueStore[key] = null;
+                return new QueryResult("Success", null, null);
+            }
+            else 
+            {
+                return new QueryResult("Failed", new KeyNotFoundException(), null);
+            }
+        }
+
+        public QueryResult SaveStore(string name)
+        {
+            bool success = BinarySerializableDictionary<string, string>.Serialize(KeyValueStore, ConfigurationManager.AppSettings["DataStoreFilePath"] + name);
+            if(success)
+            {
+                return new QueryResult("Success", null, null);
+            }
+            else 
+            {
+                return new QueryResult("Failed", null, null);
+            }
+        }
+
+        public QueryResult LoadStore(string name)
+        {
+            KeyValueStore = BinarySerializableDictionary<string, string>.Deserialize(ConfigurationManager.AppSettings["DataStoreFilePath"] + name);
+            bool success = true;
+            if(success)
+            {
+                return new QueryResult("Success", null, null);
+            }
+            else
+            {
+                return new QueryResult("Failed", null, null);
+            }
         }
 
        

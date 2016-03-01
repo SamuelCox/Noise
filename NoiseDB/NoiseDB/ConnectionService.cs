@@ -11,6 +11,7 @@ namespace NoiseDB
     public class ConnectionService
     {
         private bool ServerStarted { get; set; }
+        private TcpListener Listener { get; set;}
 
         public ConnectionService()
         {
@@ -27,14 +28,22 @@ namespace NoiseDB
             if (!ServerStarted)
             {
                 IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
-                TcpListener listener = new TcpListener(ipAddress, 4044);
+                Listener = new TcpListener(ipAddress, 4044);
+                Listener.Start();
                 ServerStarted = true;
+                Task<bool> task =  new Task<bool>(StartListening);
+                task.Start();
                 return new QueryResult("Success", null, null);
             }
             else
             {
                 return new QueryResult("Failed", null, null);
             }
+        }
+
+        public bool StartListening()
+        {
+            return true;
         }
 
 
