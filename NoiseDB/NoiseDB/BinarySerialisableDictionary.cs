@@ -7,10 +7,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using ProtoBuf;
 
 namespace NoiseDB
 {
-    [Serializable]
+    [ProtoContract]
     public class BinarySerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>
     {
 
@@ -26,21 +27,19 @@ namespace NoiseDB
 
         public static bool Serialize(Dictionary<TKey, TValue> dictionary, string filepath)
         {
-            BinaryFormatter bfw = new BinaryFormatter();
             using (FileStream stream = new FileStream(filepath, FileMode.Create))
             {
-                bfw.Serialize(stream, dictionary);
+                Serializer.Serialize(stream, dictionary);
             }
             return true;
         }
 
         public static BinarySerializableDictionary<TKey, TValue> Deserialize(string path)
         {
-            BinaryFormatter bfw = new BinaryFormatter();
             BinarySerializableDictionary<TKey, TValue> dict = new BinarySerializableDictionary<TKey,TValue>();
             using (FileStream stream = new FileStream(path, FileMode.Open))
             {
-                dict = (BinarySerializableDictionary<TKey, TValue>) bfw.Deserialize(stream);
+                dict = Serializer.Deserialize<BinarySerializableDictionary<TKey, TValue>>(stream);
             }
             return dict;
         }
