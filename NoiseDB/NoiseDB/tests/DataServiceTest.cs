@@ -20,7 +20,7 @@ namespace NoiseDB
         [Test]
         public void GetRow()
         {
-            DataService dataService = new DataService(null);
+            DataService dataService = new DataService();
             dataService.SetValue("TestKey", "TestValue");
             Assert.AreEqual("TestValue", dataService.GetRow("TestKey"));
         }
@@ -28,7 +28,7 @@ namespace NoiseDB
         [Test]
         public void TestSetValue()
         {
-            DataService dataService = new DataService(null);
+            DataService dataService = new DataService();
             dataService.SetValue("TestKey", "TestValue");
             Assert.AreEqual("TestValue", dataService.GetRow("TestKey"));
         }
@@ -36,7 +36,7 @@ namespace NoiseDB
         [Test]
         public void TestDeleteRow()
         {
-            DataService dataService = new DataService(null);
+            DataService dataService = new DataService();
             dataService.SetValue("TestKey", "TestValue");
             dataService.DeleteRow("TestKey");
             Assert.AreEqual(null, dataService.GetRow("TestKey"));

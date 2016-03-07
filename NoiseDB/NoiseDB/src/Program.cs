@@ -10,12 +10,15 @@ namespace NoiseDB
     {
         static void Main(string[] args)
         {
-            QueryService queryService = new QueryService(new DataService(new DiskService()), new ConnectionService());
+            QueryServer queryServer = new QueryServer();
+            QueryService queryService = new QueryService(new DataService(), new QueryServer());
+            queryServer.QueryService = queryService;
             string input = null;
             while (true)
             {
                 input = Console.ReadLine();
                 Query query = queryService.ConstructQuery(input);
+                Console.WriteLine(query.ToString());
                 QueryResult result = queryService.ExecuteQuery(query);
                 Console.WriteLine(result.ToString());
             }

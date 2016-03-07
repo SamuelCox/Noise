@@ -70,14 +70,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\BinarySerialisableDictionary.cs" />
+    <Compile Include="src\QueryClient.cs" />
     <Compile Include="tests\BinarySerialisableDictionaryTest.cs" />
     <Compile Include="src\Commands.cs" />
-    <Compile Include="src\ConnectionService.cs" />
+    <Compile Include="src\QueryServer.cs" />
     <Compile Include="tests\ConnectionServiceTest.cs" />
     <Compile Include="src\DataService.cs" />
     <Compile Include="tests\DataServiceTest.cs" />
-    <Compile Include="src\DiskService.cs" />
-    <Compile Include="tests\DiskServiceTest.cs" />
     <Compile Include="src\IDataService.cs" />
     <Compile Include="src\IQueryService.cs" />
     <Compile Include="tests\MockDataService.cs" />

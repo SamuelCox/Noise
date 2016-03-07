@@ -10,12 +10,10 @@ namespace NoiseDB
     public class DataService : IDataService
     {
         private BinarySerializableDictionary<string, string> KeyValueStore { get; set; }
-        private DiskService DiskService { get; set; }
         
 
-        public DataService(DiskService diskService)
+        public DataService()
         {
-            DiskService = diskService;
             KeyValueStore = new BinarySerializableDictionary<string, string>();
         }
 

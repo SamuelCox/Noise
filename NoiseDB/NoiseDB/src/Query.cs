@@ -18,5 +18,10 @@ namespace NoiseDB
             this.Key = key;
             this.Argument = argument;
         }
+
+        public override string ToString()
+        {
+            return Command.ToString() + " " + Key.ToString() + " " + Argument.ToString() + " at " + DateTime.Now;
+        }
     }
 }

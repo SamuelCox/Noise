@@ -9,9 +9,9 @@ namespace NoiseDB
     
     public class QueryResult
     {
-        public Exception ThrownException { get; private set; }
-        public string ResultMessage { get; private set; }
-        public List<string> RetrievedData { get; private set; }
+        public Exception ThrownException { get; set; }
+        public string ResultMessage { get; set; }
+        public List<string> RetrievedData { get; set; }
         
         public QueryResult(string message,Exception thrownException, List<string> retrievedData)
         {
