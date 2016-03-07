@@ -43,7 +43,6 @@ namespace NoiseDB
             if (!string.IsNullOrEmpty(key))
             {
                 KeyValueStore[key] = value;
-
                 return new QueryResult("Success", null, null);
             }
             else 

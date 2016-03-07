@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NoiseDB
 {
-    [Serializable]
+    
     public class QueryResult
     {
         public Exception ThrownException { get; private set; }
