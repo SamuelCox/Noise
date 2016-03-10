@@ -37,9 +37,7 @@ namespace NoiseDB
                     
                     Thread.Sleep(10);
                     TcpClient tcpClient = listener.AcceptTcpClient();
-                    ThreadPool.QueueUserWorkItem(ProcessListener, tcpClient);
-                    Task processListenerTask = new Task(() => ProcessListener(tcpClient));
-                    processListenerTask.Start();
+                    ThreadPool.QueueUserWorkItem(ProcessListener, tcpClient);                   
                 }
             }
             else
