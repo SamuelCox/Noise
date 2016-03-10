@@ -19,7 +19,7 @@ namespace NoiseDB
 
         public ConnectionService()
         {
-            QueryService = new QueryService(new DataService(), this);
+            
         }
         
         
@@ -29,25 +29,17 @@ namespace NoiseDB
             if (!ServerStarted)
             {
                 IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
-                Listener = new TcpListener(ipAddress, 4044);
-                Listener.Start();
+                TcpListener listener = new TcpListener(ipAddress, 4044);
+                listener.Start();
                 ServerStarted = true;                
                 while (true)
                 {
+                    
                     Thread.Sleep(10);
-                    TcpClient tcpClient = Listener.AcceptTcpClient();
-                    byte[] requestByteBuffer = new byte[256];
-                    NetworkStream stream = tcpClient.GetStream();
-                    stream.Read(requestByteBuffer, 0, requestByteBuffer.Length);
-                    string httpMessage = Encoding.ASCII.GetString(requestByteBuffer, 0, requestByteBuffer.Length);
-                    Query query = JsonConvert.DeserializeObject<Query>(httpMessage);
-                    QueryResult queryResult = QueryService.ExecuteQuery(query);
-                    string queryResultJson = JsonConvert.SerializeObject(queryResult);
-                    byte[] responseByteBuffer = new byte[256];
-                    responseByteBuffer = Encoding.ASCII.GetBytes(queryResultJson);
-                    stream.Write(responseByteBuffer, 0, responseByteBuffer.Length);
-                    stream.Flush();
-
+                    TcpClient tcpClient = listener.AcceptTcpClient();
+                    ThreadPool.QueueUserWorkItem(ProcessListener, tcpClient);
+                    Task processListenerTask = new Task(() => ProcessListener(tcpClient));
+                    processListenerTask.Start();
                 }
             }
             else
@@ -58,7 +50,23 @@ namespace NoiseDB
 
         }
 
-        public QueryResult ConnectAndQuery(Query query)
+        public void ProcessListener(Object tcpClient)
+        {
+            TcpClient client = (TcpClient)tcpClient;
+            byte[] requestByteBuffer = new byte[1024];
+            NetworkStream stream = client.GetStream();
+            stream.Read(requestByteBuffer, 0, requestByteBuffer.Length);
+            string httpMessage = Encoding.ASCII.GetString(requestByteBuffer, 0, requestByteBuffer.Length);
+            Query query = JsonConvert.DeserializeObject<Query>(httpMessage);
+            QueryResult queryResult = QueryService.ExecuteQuery(query);
+            string queryResultJson = JsonConvert.SerializeObject(queryResult);
+            byte[] responseByteBuffer = new byte[1024];
+            responseByteBuffer = Encoding.ASCII.GetBytes(queryResultJson);
+            stream.Write(responseByteBuffer, 0, responseByteBuffer.Length);
+            stream.Flush();
+        }
+
+        public QueryResult Connect(Query query)
         {
             Client = new TcpClient("127.0.0.1", 4044);
             return new QueryResult("Success", null, null);
@@ -76,8 +84,8 @@ namespace NoiseDB
             stream.Flush();
             Byte[] responseByteBuffer = new Byte[1024];
             int responseBytes = stream.Read(responseByteBuffer, 0, responseByteBuffer.Length);
-            string json = Encoding.ASCII.GetString(responseByteBuffer, 0, responseBytes);
-            QueryResult response = JsonConvert.DeserializeObject<QueryResult>(json);
+            string jsonDeserializedQueryResult = Encoding.ASCII.GetString(responseByteBuffer, 0, responseBytes);
+            QueryResult response = JsonConvert.DeserializeObject<QueryResult>(jsonDeserializedQueryResult);
             return response;
         }
         

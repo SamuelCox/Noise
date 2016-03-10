@@ -9,13 +9,13 @@ namespace NoiseDB
     public class QueryService : IQueryService
     {
         private IDataService DataService;
-        private ConnectionService QueryServer;
+        private ConnectionService ConnectionService;
         private bool IsConnectedToNetworkDataStore = false;
 
-        public QueryService(IDataService dataService, ConnectionService queryServer)
+        public QueryService(IDataService dataService, ConnectionService connectionService)
         {
             DataService = dataService;
-            QueryServer = queryServer;
+            ConnectionService = connectionService;
         }
 
 
@@ -41,7 +41,7 @@ namespace NoiseDB
         {
             if(IsConnectedToNetworkDataStore)
             {
-                return QueryServer.ProcessRemoteQuery(query);
+                return ConnectionService.ProcessRemoteQuery(query);
             }
 
             switch(query.Command)
@@ -68,8 +68,7 @@ namespace NoiseDB
                     return DataService.DeleteRow(query.Key);
 
                 case Commands.SERVER_START:                    
-                    QueryServer.ListenForConnection();
-                    return new QueryResult("blah", null, null);
+                    return ConnectionService.ListenForConnection();                    
                     
 
                 case Commands.SERVER_STOP:
@@ -77,7 +76,7 @@ namespace NoiseDB
               
                 case Commands.SERVER_CONNECT:
                     IsConnectedToNetworkDataStore = true;
-                    return QueryServer.ConnectAndQuery(null);
+                    return ConnectionService.Connect(null);
                     
 
                 case Commands.SERVER_DISCONNECT:

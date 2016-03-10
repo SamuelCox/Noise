@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NoiseDB.src;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,16 +11,15 @@ namespace NoiseDB
     {
         static void Main(string[] args)
         {
-            ConnectionService queryServer = new ConnectionService();
-            QueryService queryService = new QueryService(new DataService(), new ConnectionService());
-            queryServer.QueryService = queryService;
+            ConnectionService connectionService = new ConnectionService();
+            QueryService queryService = new QueryService(new DataService(), connectionService);
+            connectionService.QueryService = queryService;
             string input = null;
             while (true)
             {
                 input = Console.ReadLine();
                 Query query = Parser.ParseQuery(input);
-
-                Console.WriteLine(query.ToString());
+                LoggingService.LogToDisk(query);
                 QueryResult result = queryService.ExecuteQuery(query);
                 Console.WriteLine(result.ToString());
             }
