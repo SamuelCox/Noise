@@ -9,10 +9,10 @@ namespace NoiseDB
     public class QueryService : IQueryService
     {
         private IDataService DataService;
-        private QueryServer QueryServer;
+        private ConnectionService QueryServer;
         private bool IsConnectedToNetworkDataStore = false;
 
-        public QueryService(IDataService dataService, QueryServer queryServer)
+        public QueryService(IDataService dataService, ConnectionService queryServer)
         {
             DataService = dataService;
             QueryServer = queryServer;
@@ -39,6 +39,11 @@ namespace NoiseDB
 
         public QueryResult ExecuteQuery(Query query)
         {
+            if(IsConnectedToNetworkDataStore)
+            {
+                return QueryServer.ProcessRemoteQuery(query);
+            }
+
             switch(query.Command)
             {
                 case Commands.GET:
@@ -72,7 +77,7 @@ namespace NoiseDB
               
                 case Commands.SERVER_CONNECT:
                     IsConnectedToNetworkDataStore = true;
-                    return QueryServer.Connect();
+                    return QueryServer.ConnectAndQuery(null);
                     
 
                 case Commands.SERVER_DISCONNECT:

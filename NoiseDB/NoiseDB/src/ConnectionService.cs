@@ -10,13 +10,14 @@ using Newtonsoft.Json;
 
 namespace NoiseDB
 {
-    public class QueryServer
+    public class ConnectionService
     {
         private bool ServerStarted { get; set; }
         private TcpListener Listener { get; set;}
+        private TcpClient Client { get; set; }
         public QueryService QueryService { private get; set; }
 
-        public QueryServer()
+        public ConnectionService()
         {
             QueryService = new QueryService(new DataService(), this);
         }
@@ -57,21 +58,27 @@ namespace NoiseDB
 
         }
 
-        public QueryResult Connect()
+        public QueryResult ConnectAndQuery(Query query)
         {
-            TcpClient client = new TcpClient("127.0.0.1", 4044);
-            Byte[] byteBuffer = new Byte[256];
-            string blah = JsonConvert.SerializeObject(QueryService.ConstructQuery("set,users:100,3"));
-            byteBuffer = Encoding.ASCII.GetBytes(blah);
-            NetworkStream stream = client.GetStream();
+            Client = new TcpClient("127.0.0.1", 4044);
+            return new QueryResult("Success", null, null);
+
+
+        }
+
+        public QueryResult ProcessRemoteQuery(Query query)
+        {
+            Byte[] byteBuffer = new Byte[1024];
+            string jsonSerializedQuery = JsonConvert.SerializeObject(query);
+            byteBuffer = Encoding.ASCII.GetBytes(jsonSerializedQuery);
+            NetworkStream stream = Client.GetStream();
             stream.Write(byteBuffer, 0, byteBuffer.Length);
             stream.Flush();
-            Byte[] responseByteBuffer = new Byte[256];
+            Byte[] responseByteBuffer = new Byte[1024];
             int responseBytes = stream.Read(responseByteBuffer, 0, responseByteBuffer.Length);
             string json = Encoding.ASCII.GetString(responseByteBuffer, 0, responseBytes);
             QueryResult response = JsonConvert.DeserializeObject<QueryResult>(json);
             return response;
-
         }
         
 
