@@ -18,7 +18,7 @@ namespace NoiseDB
             while (true)
             {
                 input = Console.ReadLine();
-                Query query = Parser.ParseQuery(input);
+                Query query = queryService.ConstructQuery(input);
                 LoggingService.LogToDisk(query);
                 QueryResult result = queryService.ExecuteQuery(query);
                 Console.WriteLine(result.ToString());

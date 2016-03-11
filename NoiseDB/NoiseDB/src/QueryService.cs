@@ -76,7 +76,7 @@ namespace NoiseDB
               
                 case Commands.SERVER_CONNECT:
                     IsConnectedToNetworkDataStore = true;
-                    return ConnectionService.Connect(null);
+                    return ConnectionService.Connect();
                     
 
                 case Commands.SERVER_DISCONNECT:

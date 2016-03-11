@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NoiseDB.src
 {
-    public class LoggingService
+    public static class LoggingService
     {
         public const string DATE_FORMAT = "yyyy-MM-dd";
         

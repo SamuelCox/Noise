@@ -81,7 +81,6 @@
     <Compile Include="src\IDataService.cs" />
     <Compile Include="src\IQueryService.cs" />
     <Compile Include="tests\MockDataService.cs" />
-    <Compile Include="src\Parser.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Query.cs" />
