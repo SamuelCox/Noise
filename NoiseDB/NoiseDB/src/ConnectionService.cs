@@ -58,17 +58,18 @@ namespace NoiseDB
                 Thread.Sleep(10);
                 NetworkStream stream = tcpClient.GetStream();
                 int requestBytes = stream.Read(requestByteBuffer, 0, requestByteBuffer.Length);
-                string httpMessage = Encoding.ASCII.GetString(requestByteBuffer, 0, requestBytes);
-                Query query = JsonConvert.DeserializeObject<Query>(httpMessage);
-                if(query.Command == Commands.SERVER_DISCONNECT)
+                string jsonSerializedQuery = Encoding.ASCII.GetString(requestByteBuffer, 0, requestBytes);
+                Query query = JsonConvert.DeserializeObject<Query>(jsonSerializedQuery);                
+                QueryResult queryResult = QueryService.ExecuteQuery(query);
+                string queryResultJson = JsonConvert.SerializeObject(queryResult);
+                int responseByteBufferSize = Encoding.ASCII.GetByteCount(queryResultJson);
+                responseByteBuffer = Encoding.ASCII.GetBytes(queryResultJson);
+                stream.Write(responseByteBuffer, 0, responseByteBufferSize);
+                stream.Flush();
+                if (query.Command == Commands.SERVER_DISCONNECT)
                 {
                     break;
                 }
-                QueryResult queryResult = QueryService.ExecuteQuery(query);
-                string queryResultJson = JsonConvert.SerializeObject(queryResult);                
-                responseByteBuffer = Encoding.ASCII.GetBytes(queryResultJson);
-                stream.Write(responseByteBuffer, 0, responseByteBuffer.Length);
-                stream.Flush();
             }
         }
 
@@ -77,10 +78,7 @@ namespace NoiseDB
             Client = new TcpClient("127.0.0.1", 4044);
             return new QueryResult("Success", null, null);
         }
-
-        public void Disconnect()
-        {
-        }
+        
 
         public QueryResult ProcessRemoteQuery(Query query)
         {

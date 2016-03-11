@@ -1,18 +1,17 @@
-﻿using System;
+﻿using ProtoBuf;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
-using System.Configuration;
-using ProtoBuf;
 
 namespace NoiseDB
 {
     [ProtoContract]
-    public class BinarySerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>
+    public class BinarySerializableDictionary<TKey, TValue> : ConcurrentDictionary<TKey, TValue>
     {
 
         public BinarySerializableDictionary()
@@ -20,12 +19,9 @@ namespace NoiseDB
 
         }
 
-        protected BinarySerializableDictionary(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-            
-        }
+        
 
-        public static bool Serialize(Dictionary<TKey, TValue> dictionary, string filepath)
+        public static bool Serialize(ConcurrentDictionary<TKey, TValue> dictionary, string filepath)
         {
             using (FileStream stream = new FileStream(filepath, FileMode.Create))
             {

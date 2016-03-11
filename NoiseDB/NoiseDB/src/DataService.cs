@@ -24,7 +24,7 @@ namespace NoiseDB
             QueryResult queryResult;
             if(!string.IsNullOrEmpty(key) && KeyValueStore.ContainsKey(key))
             {
-                result = KeyValueStore[key];
+                bool success = KeyValueStore.TryGetValue(key, out result);
             }
             else 
             {
@@ -40,7 +40,11 @@ namespace NoiseDB
         {
             if (!string.IsNullOrEmpty(key))
             {
-                KeyValueStore[key] = value;
+                KeyValueStore.AddOrUpdate(key, value,
+                (updateKey, existingVal) =>
+                { 
+                    return existingVal;
+                });
                 return new QueryResult("Success", null, null);
             }
             else 
@@ -51,9 +55,10 @@ namespace NoiseDB
 
         public QueryResult DeleteRow(string key)
         {
+            string result;
             if (!string.IsNullOrEmpty(key))
             {
-                KeyValueStore[key] = null;
+                KeyValueStore.TryRemove(key,out result);
                 return new QueryResult("Success", null, null);
             }
             else 
