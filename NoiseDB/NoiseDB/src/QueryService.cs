@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NoiseDB.src;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,11 +40,15 @@ namespace NoiseDB
 
         public QueryResult ExecuteQuery(Query query)
         {
+            
             if(IsConnectedToNetworkDataStore)
             {
-                return ConnectionService.ProcessRemoteQuery(query);
+                LoggingService.LogToDisk(query);
+                return ConnectionService.SendQueryAndReceiveResult(query);
             }
-
+           
+            LoggingService.LogToDisk(query,IsConnectedToNetworkDataStore);
+            
             switch(query.Command)
             {
                 case Commands.GET:
@@ -99,8 +104,10 @@ namespace NoiseDB
 
                 default:
                     return new QueryResult("Unrecognised command", null, null);                
-            }
-        }
+             }
+
+            
+       } 
 
         
     }

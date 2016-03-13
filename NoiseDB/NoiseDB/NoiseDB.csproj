@@ -71,7 +71,6 @@
   <ItemGroup>
     <Compile Include="src\BinarySerialisableDictionary.cs" />
     <Compile Include="src\LoggingService.cs" />
-    <Compile Include="src\QueryClient.cs" />
     <Compile Include="tests\BinarySerialisableDictionaryTest.cs" />
     <Compile Include="src\Commands.cs" />
     <Compile Include="src\ConnectionService.cs" />

@@ -13,9 +13,20 @@ namespace NoiseDB.src
         public const string DATE_FORMAT = "yyyy-MM-dd";
         
 
-        public static void LogToDisk(Query query)
+        public static void LogToDisk(Query query, bool remoteQuery = false)
         {
             string directoryPath = ConfigurationManager.AppSettings["LoggingDirectory"];
+            string queryLogString;
+            if (remoteQuery)
+            {
+                queryLogString = query.ToString() + " processed on server";
+                
+            }
+            else
+            {
+                queryLogString = query.ToString();
+            }
+            
             if(Directory.Exists(directoryPath))
             {
                 DateTime currentDay = DateTime.Today.Date;

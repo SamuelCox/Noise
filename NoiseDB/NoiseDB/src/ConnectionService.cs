@@ -7,13 +7,13 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using Newtonsoft.Json;
+using NoiseDB.src;
 
 namespace NoiseDB
 {
     public class ConnectionService
     {
         private bool ServerStarted { get; set; }
-        private TcpListener Listener { get; set;}
         private TcpClient Client { get; set; }
         public QueryService QueryService { private get; set; }
 
@@ -37,7 +37,7 @@ namespace NoiseDB
                     
                     Thread.Sleep(10);
                     TcpClient tcpClient = listener.AcceptTcpClient();
-                    new Task(() => ProcessListener(tcpClient)).Start();                    
+                    new Task(() => ReceiveQueryAndSendResult(tcpClient)).Start();                    
                 }
             }
             else
@@ -48,7 +48,7 @@ namespace NoiseDB
 
         }
 
-        public void ProcessListener(TcpClient tcpClient)
+        public void ReceiveQueryAndSendResult(TcpClient tcpClient)
         {
 
             byte[] requestByteBuffer = new byte[1024];
@@ -80,7 +80,7 @@ namespace NoiseDB
         }
         
 
-        public QueryResult ProcessRemoteQuery(Query query)
+        public QueryResult SendQueryAndReceiveResult(Query query)
         {
             Byte[] byteBuffer = new Byte[1024];
             string jsonSerializedQuery = JsonConvert.SerializeObject(query);

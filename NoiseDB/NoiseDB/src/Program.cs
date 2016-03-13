@@ -19,7 +19,6 @@ namespace NoiseDB
             {
                 input = Console.ReadLine();
                 Query query = queryService.ConstructQuery(input);
-                LoggingService.LogToDisk(query);
                 QueryResult result = queryService.ExecuteQuery(query);
                 Console.WriteLine(result.ToString());
             }
