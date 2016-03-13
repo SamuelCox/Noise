@@ -43,7 +43,7 @@ namespace NoiseDB
                 KeyValueStore.AddOrUpdate(key, value,
                 (updateKey, existingVal) =>
                 { 
-                    return existingVal;
+                    return value;
                 });
                 return new QueryResult("Success", null, null);
             }
