@@ -21,7 +21,7 @@ namespace NoiseDB
 
         public override string ToString()
         {
-            return Command.ToString() + " " + Key.ToString() + " " + Argument.ToString() + " at " + DateTime.Now;
+            return Command.ToString() + " " + Key?.ToString() + " " + Argument?.ToString() + " at " + DateTime.Now;
         }
     }
 }
