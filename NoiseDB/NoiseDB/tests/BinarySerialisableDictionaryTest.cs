@@ -31,7 +31,8 @@ namespace NoiseDB
         public void TestDeserialize()
         {
             BinarySerializableDictionary<string, string> dict = new BinarySerializableDictionary<string, string>();
-            dict = BinarySerializableDictionary<string, string>.Deserialize(@"C:\Users\Noiiise\Desktop\desktopshit\dict.bin");
+            string filePath = ConfigurationManager.AppSettings["DataStoreFilePath"];
+            dict = BinarySerializableDictionary<string, string>.Deserialize(filePath + @"\dict.bin");
             Assert.AreEqual("yes", dict["hi"]);
         }
     }
