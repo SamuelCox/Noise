@@ -50,11 +50,9 @@ namespace NoiseDB
         {
             get
             {
-                List<string> testResultData = new List<string>();
-                testResultData.Add("3");
-                testResultData.Add("4");
+                
                 yield return new QueryResult("Success",null,null);
-                yield return new QueryResult("Success", null, testResultData);
+                yield return new QueryResult("Success", null, "3");
                 yield return new QueryResult("Failed", new Exception("test"), null);
                 yield return new QueryResult("Failed", null, null);
             }

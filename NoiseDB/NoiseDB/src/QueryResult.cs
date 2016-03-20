@@ -11,9 +11,9 @@ namespace NoiseDB
     {
         public Exception ThrownException { get; set; }
         public string ResultMessage { get; set; }
-        public List<string> RetrievedData { get; set; }
+        public string RetrievedData { get; set; }
         
-        public QueryResult(string message,Exception thrownException, List<string> retrievedData)
+        public QueryResult(string message,Exception thrownException, string retrievedData)
         {
             ThrownException = thrownException;
             ResultMessage = message;
@@ -22,22 +22,13 @@ namespace NoiseDB
 
         public override string ToString()
         {
-            StringBuilder stringBuilder = new StringBuilder(ResultMessage);
             if(ThrownException == null)
             {
-                if (RetrievedData != null)
-                {
-                    foreach (string data in RetrievedData)
-                    {
-                        stringBuilder.Append(" " + data);
-                    }
-                }
-                return stringBuilder.ToString();
+                return ResultMessage + " " + RetrievedData;
             }
             else
-            {                
-                stringBuilder.Append(" with Exception : " + ThrownException.ToString());
-                return stringBuilder.ToString();
+            {
+                return ResultMessage + " with Exception : " + ThrownException.ToString();
             }
         }
 

@@ -80,8 +80,12 @@ namespace NoiseDB
                     return new QueryResult("NotImplemented", null, null);      
               
                 case Commands.SERVER_CONNECT:
+                    if (string.IsNullOrEmpty(query.Key))
+                    {
+                        return new QueryResult("Failed", new ArgumentNullException(), null);
+                    }
                     IsConnectedToNetworkDataStore = true;
-                    return ConnectionService.Connect();
+                    return ConnectionService.Connect(query.Key);
                     
 
                 case Commands.SERVER_DISCONNECT:

@@ -23,32 +23,43 @@ namespace NoiseDB
             QueryService queryService = new QueryService(new MockDataService(),null);
             Query query = queryService.ConstructQuery(testQuery);
             string[] queryParts = testQuery.Split(',');
-            Assert.AreEqual(query.Command, queryParts[0]);
-            Assert.AreEqual(query.Key, queryParts[1]);
-            Assert.AreEqual(query.Argument, queryParts[2]);
+            Assert.AreEqual(query.Command.ToString(), queryParts[0]);
+            if (queryParts.Count() > 1)
+            {
+                Assert.AreEqual(query.Key, queryParts[1]);
+            }
+            if(queryParts.Count() > 2)
+            {
+                Assert.AreEqual(query.Argument, queryParts[2]);
+            }
+            
             
         }
 
-        [TestCaseSource("GetExecuteTestCases")]
+        
         [Test]
-        public void TestExecuteQuery(Query query)
+        public void TestExecuteQuery()
         {
             QueryService queryService = new QueryService(new MockDataService(), null);
-            QueryResult queryResult = queryService.ExecuteQuery(query);
-            if (query.Command == Commands.GET)
+            List<Query> queryTestData = GetExecuteTestCases.ToList<Query>();
+            foreach (Query query in queryTestData)
             {
-                Assert.AreEqual(queryResult.ResultMessage, "GetSuccess");
-            }
-            else if(query.Command == Commands.SET) 
-            {
-                Assert.AreEqual(queryResult.ResultMessage, "SetSuccess");
-            }
-            else
-            {
-                Assert.AreEqual(queryResult.ResultMessage, "DeleteSuccess");
+                QueryResult queryResult = queryService.ExecuteQuery(query);
+                if (query.Command == Commands.GET)
+                {
+                    Assert.AreEqual(queryResult.ResultMessage, "GetSuccess");
+                }
+                else if (query.Command == Commands.SET)
+                {
+                    Assert.AreEqual(queryResult.ResultMessage, "SetSuccess");
+                }
+                else
+                {
+                    Assert.AreEqual(queryResult.ResultMessage, "DeleteSuccess");
+                }
             }
 
-        }
+        }        
 
         public IEnumerable<Query> GetExecuteTestCases
         {

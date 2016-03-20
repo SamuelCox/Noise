@@ -29,10 +29,8 @@ namespace NoiseDB
             else 
             {
                 return new QueryResult("Failed", new KeyNotFoundException(), null);
-            }
-            List<string> results = new List<string>();
-            results.Add(result);
-            queryResult = new QueryResult("Success", null, results);
+            }            
+            queryResult = new QueryResult("Success", null, result);
             return queryResult;
         }
 

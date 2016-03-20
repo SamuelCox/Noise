@@ -73,9 +73,9 @@ namespace NoiseDB
             }
         }
 
-        public QueryResult Connect()
+        public QueryResult Connect(string ipAddress)
         {
-            Client = new TcpClient("127.0.0.1", 4044);
+            Client = new TcpClient(ipAddress, 4044);
             return new QueryResult("Success", null, null);
         }
         
