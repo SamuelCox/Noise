@@ -11,7 +11,7 @@ namespace NoiseDB
         public IDataService DataService { get; private set;}
         public IQueryService QueryService { get; private set;}
         
-        public ConnectionService ConnectionService { get; private set;}
+        public NetworkQueryServer ConnectionService { get; private set;}
 
         public ServiceManager()
         {
@@ -21,9 +21,8 @@ namespace NoiseDB
         public void InitServices()
         {
         
-            DataService = new DataService();
-            ConnectionService = new ConnectionService();
-            QueryService = new QueryService(DataService, ConnectionService);            
+            DataService = new DataService();            
+            QueryService = new QueryService(DataService);            
 
         }
     }

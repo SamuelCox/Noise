@@ -10,13 +10,17 @@ namespace NoiseDB
     public class QueryService : IQueryService
     {
         private IDataService DataService;
-        private ConnectionService ConnectionService;
+        private NetworkQueryServer NetworkQueryServer;
+        private NetworkQueryClient NetworkQueryClient;
         private bool IsConnectedToNetworkDataStore = false;
 
-        public QueryService(IDataService dataService, ConnectionService connectionService)
+        public QueryService(IDataService dataService)
         {
             DataService = dataService;
-            ConnectionService = connectionService;
+            NetworkQueryClient = new NetworkQueryClient();
+            NetworkQueryServer =  new NetworkQueryServer();
+            NetworkQueryServer.QueryService = this;
+            
         }
 
 
@@ -44,7 +48,11 @@ namespace NoiseDB
             if(IsConnectedToNetworkDataStore)
             {
                 LoggingService.LogToDisk(query);
-                return ConnectionService.SendQueryAndReceiveResult(query);
+                if (query.Command == Commands.SERVER_DISCONNECT)
+                {
+                    IsConnectedToNetworkDataStore = false;
+                }
+                return NetworkQueryClient.SendQueryAndReceiveResult(query);
             }
            
             LoggingService.LogToDisk(query,IsConnectedToNetworkDataStore);
@@ -73,7 +81,7 @@ namespace NoiseDB
                     return DataService.DeleteRow(query.Key);
 
                 case Commands.SERVER_START:                    
-                    return ConnectionService.ListenForConnection();                    
+                    return NetworkQueryServer.StartListener();                    
                     
 
                 case Commands.SERVER_STOP:
@@ -85,12 +93,12 @@ namespace NoiseDB
                         return new QueryResult("Failed", new ArgumentNullException(), null);
                     }
                     IsConnectedToNetworkDataStore = true;
-                    return ConnectionService.Connect(query.Key);
+                    return NetworkQueryClient.Connect(query.Key);
                     
 
                 case Commands.SERVER_DISCONNECT:
                     IsConnectedToNetworkDataStore = false;
-                    return new QueryResult("NotImplemented", null, null);
+                    return new QueryResult("Success", null, null);
 
                 case Commands.SAVE:
                     if (string.IsNullOrEmpty(query.Key))

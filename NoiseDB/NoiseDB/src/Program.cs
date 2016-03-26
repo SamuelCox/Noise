@@ -10,10 +10,8 @@ namespace NoiseDB
     class Program
     {
         static void Main(string[] args)
-        {
-            ConnectionService connectionService = new ConnectionService();
-            QueryService queryService = new QueryService(new DataService(), connectionService);
-            connectionService.QueryService = queryService;
+        {            
+            QueryService queryService = new QueryService(new DataService());            
             string input = null;
             while (true)
             {
