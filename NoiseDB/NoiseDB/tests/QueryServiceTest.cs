@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace NoiseDB
 {
     [TestFixture]
-    class QueryServiceTest
+    public class QueryServiceTest
     {
         public QueryServiceTest()
         {
@@ -20,7 +20,7 @@ namespace NoiseDB
         [Test]
         public void TestConstructQuery(string testQuery)
         {
-            QueryService queryService = new QueryService(new MockDataService());
+            QueryService queryService = new QueryService();
             Query query = queryService.ConstructQuery(testQuery);
             string[] queryParts = testQuery.Split(',');
             Assert.AreEqual(query.Command.ToString(), queryParts[0]);
@@ -47,15 +47,15 @@ namespace NoiseDB
                 QueryResult queryResult = queryService.ExecuteQuery(query);
                 if (query.Command == Commands.GET)
                 {
-                    Assert.AreEqual(queryResult.ResultMessage, "GetSuccess");
+                    Assert.AreEqual("GetSuccess", queryResult.ResultMessage);
                 }
                 else if (query.Command == Commands.SET)
                 {
-                    Assert.AreEqual(queryResult.ResultMessage, "SetSuccess");
+                    Assert.AreEqual("SetSuccess", queryResult.ResultMessage);
                 }
                 else
                 {
-                    Assert.AreEqual(queryResult.ResultMessage, "DeleteSuccess");
+                    Assert.AreEqual("DeleteSuccess", queryResult.ResultMessage);
                 }
             }
 

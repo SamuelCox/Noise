@@ -90,11 +90,10 @@
   <ItemGroup>
     <Compile Include="src\BinarySerialisableDictionary.cs" />
     <Compile Include="src\LoggingService.cs" />
-    <Compile Include="src\NetworkQueryClient.cs" />
+    <Compile Include="src\QueryTcpClient.cs" />
     <Compile Include="tests\BinarySerialisableDictionaryTest.cs" />
     <Compile Include="src\Commands.cs" />
-    <Compile Include="src\NetworkQueryServer.cs" />
-    <Compile Include="tests\ConnectionServiceTest.cs" />
+    <Compile Include="src\QueryTcpServer.cs" />
     <Compile Include="src\DataService.cs" />
     <Compile Include="tests\DataServiceTest.cs" />
     <Compile Include="src\IDataService.cs" />

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NoiseDB
 {
-    public interface IQueryService
+    internal interface IQueryService
     {
         Query ConstructQuery(string query);
 

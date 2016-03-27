@@ -16,14 +16,14 @@ using System.Configuration;
 
 namespace NoiseDB
 {
-    public class NetworkQueryServer
+    public class QueryTcpServer
     {
         private bool ServerStarted { get; set; }        
         public QueryService QueryService { get; set; }
-        public bool UseTls { get; private set; }
+        private bool UseTls { get; set; }
         
 
-        public NetworkQueryServer()
+        public QueryTcpServer()
         {
             UseTls = bool.Parse(ConfigurationManager.AppSettings["UseTls"]);
         }
@@ -80,8 +80,7 @@ namespace NoiseDB
             using (stream)
             {
                 while (true)
-                {
-                    Thread.Sleep(10);
+                {                    
                     int requestBytes = stream.Read(requestByteBuffer, 0, requestByteBuffer.Length);
                     string jsonSerializedQuery = Encoding.ASCII.GetString(requestByteBuffer, 0, requestBytes);
                     Query query = JsonConvert.DeserializeObject<Query>(jsonSerializedQuery);

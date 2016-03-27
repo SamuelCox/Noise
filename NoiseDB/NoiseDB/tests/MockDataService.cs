@@ -13,7 +13,7 @@ namespace NoiseDB
 
         }
 
-        public QueryResult GetRow(string key)
+        public QueryResult GetValue(string key)
         {
             return new QueryResult("GetSuccess",null,null);
         }

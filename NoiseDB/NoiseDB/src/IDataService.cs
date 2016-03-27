@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace NoiseDB
 {
-    public interface IDataService
+    internal interface IDataService
     {
 
-        QueryResult GetRow(string key);
+        QueryResult GetValue(string key);
         
 
         QueryResult SetValue(string key, string value);

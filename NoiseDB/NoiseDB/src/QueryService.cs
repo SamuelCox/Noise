@@ -10,17 +10,25 @@ namespace NoiseDB
     public class QueryService : IQueryService
     {
         private IDataService DataService;
-        private NetworkQueryServer NetworkQueryServer;
-        private NetworkQueryClient NetworkQueryClient;
-        private bool IsConnectedToNetworkDataStore = false;
+        private QueryTcpServer QueryTcpServer;
+        private QueryTcpClient QueryTcpClient;
+        private bool IsConnectedToNetworkDataStore = false;        
 
-        public QueryService(IDataService dataService)
+        public QueryService()
+        {
+            DataService = new DataService();
+            QueryTcpClient = new QueryTcpClient();
+            QueryTcpServer =  new QueryTcpServer();
+            QueryTcpServer.QueryService = this;
+            
+        }
+
+        internal QueryService(IDataService dataService)
         {
             DataService = dataService;
-            NetworkQueryClient = new NetworkQueryClient();
-            NetworkQueryServer =  new NetworkQueryServer();
-            NetworkQueryServer.QueryService = this;
-            
+            QueryTcpClient = new QueryTcpClient();
+            QueryTcpServer = new QueryTcpServer();
+            QueryTcpServer.QueryService = this;
         }
 
 
@@ -52,7 +60,7 @@ namespace NoiseDB
                 {
                     IsConnectedToNetworkDataStore = false;
                 }
-                return NetworkQueryClient.SendQueryAndReceiveResult(query);
+                return QueryTcpClient.SendQueryAndReturnResult(query);
             }
            
             LoggingService.LogToDisk(query,IsConnectedToNetworkDataStore);
@@ -60,66 +68,112 @@ namespace NoiseDB
             switch(query.Command)
             {
                 case Commands.GET:
-                    if (string.IsNullOrEmpty(query.Key))
-                    {
-                        return new QueryResult("Failed", new ArgumentNullException(), null);
-                    }
-                    return DataService.GetRow(query.Key);
+                    return GetValue(query);
 
                 case Commands.SET:
-                    if (string.IsNullOrEmpty(query.Argument) || string.IsNullOrEmpty(query.Key))
-                    {
-                        return new QueryResult("Failed", new ArgumentNullException(), null);
-                    }
-                    return DataService.SetValue(query.Key, query.Argument);  
+                    return SetValue(query);
                   
                 case Commands.DELETE:
-                    if (string.IsNullOrEmpty(query.Key))
-                    {
-                        return new QueryResult("Failed", new ArgumentNullException(), null);
-                    }
-                    return DataService.DeleteRow(query.Key);
+                    return DeleteValue(query);
 
-                case Commands.SERVER_START:                    
-                    return NetworkQueryServer.StartListener();                    
+                case Commands.SERVER_START:
+                    return StartServer();
                     
 
                 case Commands.SERVER_STOP:
-                    return new QueryResult("NotImplemented", null, null);      
+                    return StopServer();
               
                 case Commands.SERVER_CONNECT:
-                    if (string.IsNullOrEmpty(query.Key))
-                    {
-                        return new QueryResult("Failed", new ArgumentNullException(), null);
-                    }
-                    IsConnectedToNetworkDataStore = true;
-                    return NetworkQueryClient.Connect(query.Key);
+                    return ServerConnect(query);
                     
-
                 case Commands.SERVER_DISCONNECT:
                     IsConnectedToNetworkDataStore = false;
                     return new QueryResult("Success", null, null);
 
                 case Commands.SAVE:
-                    if (string.IsNullOrEmpty(query.Key))
-                    {
-                        return new QueryResult("Failed", new ArgumentNullException(), null);
-                    }                    
-                    return DataService.SaveStore(query.Key);     
+                    return SaveDataStore(query);
                
                 case Commands.LOAD:
-                    if (string.IsNullOrEmpty(query.Key))
-                    {
-                        return new QueryResult("Failed", new ArgumentNullException(), null);
-                    }                    
-                    return DataService.LoadStore(query.Key);
+                    return LoadDataStore(query);
 
                 default:
                     return new QueryResult("Unrecognised command", null, null);                
              }
 
             
-       } 
+       }
+        
+        private QueryResult GetValue(Query query)
+        {
+            if (string.IsNullOrEmpty(query.Key))
+            {
+                return new QueryResult("Failed", new ArgumentNullException(), null);
+            }
+            return DataService.GetValue(query.Key);
+        }
+
+        private QueryResult SetValue(Query query)
+        {
+            if (string.IsNullOrEmpty(query.Argument) || string.IsNullOrEmpty(query.Key))
+            {
+                return new QueryResult("Failed", new ArgumentNullException(), null);
+            }
+            return DataService.SetValue(query.Key, query.Argument);
+
+        }
+
+        private QueryResult DeleteValue(Query query)
+        {
+            if (string.IsNullOrEmpty(query.Key))
+            {
+                return new QueryResult("Failed", new ArgumentNullException(), null);
+            }
+            return DataService.DeleteRow(query.Key);
+        }
+
+        private QueryResult StartServer()
+        {
+            return QueryTcpServer.StartListener();
+        }
+
+        private QueryResult StopServer()
+        {
+            return new QueryResult("NotImplemented", null, null);
+        }
+
+        private QueryResult ServerConnect(Query query)
+        {
+            if (string.IsNullOrEmpty(query.Key))
+            {
+                return new QueryResult("Failed", new ArgumentNullException(), null);
+            }
+            IsConnectedToNetworkDataStore = true;
+            return QueryTcpClient.Connect(query.Key);
+        }
+
+        private QueryResult ServerDisconnect(Query query)
+        {
+            IsConnectedToNetworkDataStore = false;
+            return new QueryResult("Success", null, null);
+        }
+
+        private QueryResult SaveDataStore(Query query)
+        {
+            if (string.IsNullOrEmpty(query.Key))
+            {
+                return new QueryResult("Failed", new ArgumentNullException(), null);
+            }
+            return DataService.SaveStore(query.Key);
+        }
+
+        private QueryResult LoadDataStore(Query query)
+        {
+            if (string.IsNullOrEmpty(query.Key))
+            {
+                return new QueryResult("Failed", new ArgumentNullException(), null);
+            }
+            return DataService.LoadStore(query.Key);
+        }
 
         
     }

@@ -22,7 +22,7 @@ namespace NoiseDB
         {
             DataService dataService = new DataService();
             dataService.SetValue("TestKey", "TestValue");
-            Assert.AreEqual("TestValue", dataService.GetRow("TestKey").RetrievedData);
+            Assert.AreEqual("TestValue", dataService.GetValue("TestKey").RetrievedData);
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace NoiseDB
         {
             DataService dataService = new DataService();
             dataService.SetValue("TestKey", "TestValue");
-            Assert.AreEqual("TestValue", dataService.GetRow("TestKey").RetrievedData);
+            Assert.AreEqual("TestValue", dataService.GetValue("TestKey").RetrievedData);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace NoiseDB
             DataService dataService = new DataService();
             dataService.SetValue("TestKey", "TestValue");
             dataService.DeleteRow("TestKey");
-            Assert.IsInstanceOf(typeof(KeyNotFoundException), dataService.GetRow("TestKey").ThrownException);
+            Assert.IsInstanceOf(typeof(KeyNotFoundException), dataService.GetValue("TestKey").ThrownException);
         }
         
 

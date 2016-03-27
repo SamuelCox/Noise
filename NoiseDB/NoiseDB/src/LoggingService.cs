@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace NoiseDB.src
 {
-    public static class LoggingService
+    internal static class LoggingService
     {
         public const string DATE_FORMAT = "yyyy-MM-dd";
         
 
-        public static void LogToDisk(Query query, bool remoteQuery = false)
+        internal static void LogToDisk(Query query, bool remoteQuery = false)
         {
             string directoryPath = ConfigurationManager.AppSettings["LoggingDirectory"];
             string queryLogString;

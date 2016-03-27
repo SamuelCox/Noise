@@ -7,7 +7,7 @@ using System.Configuration;
 
 namespace NoiseDB
 {
-    public class DataService : IDataService
+    internal class DataService : IDataService
     {
         private BinarySerializableDictionary<string, string> KeyValueStore { get; set; }
         
@@ -17,14 +17,14 @@ namespace NoiseDB
             KeyValueStore = new BinarySerializableDictionary<string, string>();
         }
 
-        public QueryResult GetRow(string key)
+        public QueryResult GetValue(string key)
         {
 
             string result;
             QueryResult queryResult;
             if(!string.IsNullOrEmpty(key) && KeyValueStore.ContainsKey(key))
             {
-                bool success = KeyValueStore.TryGetValue(key, out result);
+               KeyValueStore.TryGetValue(key, out result);
             }
             else 
             {
@@ -67,7 +67,8 @@ namespace NoiseDB
 
         public QueryResult SaveStore(string name)
         {
-            bool success = BinarySerializableDictionary<string, string>.Serialize(KeyValueStore, ConfigurationManager.AppSettings["DataStoreFilePath"] + name);
+            string filePath = ConfigurationManager.AppSettings["DataStoreFilePath"] + name;
+            bool success = BinarySerializableDictionary<string, string>.Serialize(KeyValueStore, filePath);
             if(success)
             {
                 return new QueryResult("Success", null, null);
@@ -80,7 +81,8 @@ namespace NoiseDB
 
         public QueryResult LoadStore(string name)
         {
-            KeyValueStore = BinarySerializableDictionary<string, string>.Deserialize(ConfigurationManager.AppSettings["DataStoreFilePath"] + name);
+            string filePath = ConfigurationManager.AppSettings["DataStoreFilePath"] + name;
+            KeyValueStore = BinarySerializableDictionary<string, string>.Deserialize(filePath);
             bool success = true;
             if(success)
             {
