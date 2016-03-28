@@ -1,17 +1,13 @@
-﻿using NoiseDB.src;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NoiseDB
 {
     public class QueryService : IQueryService
     {
         private IDataService DataService;
-        private QueryTcpServer QueryTcpServer;
-        private QueryTcpClient QueryTcpClient;
+        private IQueryTcpServer QueryTcpServer;
+        private IQueryTcpClient QueryTcpClient;
         private bool IsConnectedToNetworkDataStore = false;        
 
         public QueryService()
@@ -23,11 +19,12 @@ namespace NoiseDB
             
         }
 
-        internal QueryService(IDataService dataService)
+        internal QueryService(IDataService dataService, IQueryTcpClient queryTcpClient,
+                               IQueryTcpServer queryTcpServer)
         {
             DataService = dataService;
-            QueryTcpClient = new QueryTcpClient();
-            QueryTcpServer = new QueryTcpServer();
+            QueryTcpClient = queryTcpClient;
+            QueryTcpServer = queryTcpServer;
             QueryTcpServer.QueryService = this;
         }
 

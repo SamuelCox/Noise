@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
-namespace NoiseDB
+
+namespace NoiseDB.Tests
 {
     [TestFixture]
     public class QueryServiceTest
@@ -40,23 +38,13 @@ namespace NoiseDB
         [Test]
         public void TestExecuteQuery()
         {
-            QueryService queryService = new QueryService(new MockDataService());
-            List<Query> queryTestData = GetExecuteTestCases.ToList<Query>();
-            foreach (Query query in queryTestData)
+            QueryService queryService = new QueryService(new MockDataService(), new MockQueryTcpClient(),
+                                                         new MockQueryTcpServer());
+            List<KeyValuePair<Query, QueryResult>> queryTestData = GetExecute.ToList<KeyValuePair<Query, QueryResult>>();
+            foreach (KeyValuePair<Query, QueryResult> keyValuePair in queryTestData)
             {
-                QueryResult queryResult = queryService.ExecuteQuery(query);
-                if (query.Command == Commands.GET)
-                {
-                    Assert.AreEqual("GetSuccess", queryResult.ResultMessage);
-                }
-                else if (query.Command == Commands.SET)
-                {
-                    Assert.AreEqual("SetSuccess", queryResult.ResultMessage);
-                }
-                else
-                {
-                    Assert.AreEqual("DeleteSuccess", queryResult.ResultMessage);
-                }
+                QueryResult queryResult = queryService.ExecuteQuery(keyValuePair.Key);
+                Assert.AreEqual(keyValuePair.Value.ResultMessage, queryResult.ResultMessage);
             }
 
         }        
@@ -71,6 +59,40 @@ namespace NoiseDB
             }
         }
 
+
+        public IEnumerable<KeyValuePair<Query, QueryResult>> GetExecute
+        {
+            get
+            {
+                Query testQuery1 = new Query(Commands.GET, "USERS:1000", string.Empty);
+                QueryResult testQueryResult1 = new QueryResult("GetSuccess", null, null);
+                KeyValuePair<Query, QueryResult> testDatum1 = new KeyValuePair<Query, QueryResult>(testQuery1, testQueryResult1);
+                yield return testDatum1;
+
+                Query testQuery2 = new Query(Commands.SET, "ID", "3");
+                QueryResult testQueryResult2 = new QueryResult("SetSuccess", null, null);
+                KeyValuePair<Query, QueryResult> testDatum2 = new KeyValuePair<Query, QueryResult>(testQuery2, testQueryResult2);
+                yield return testDatum2;
+
+                Query testQuery3 = new Query(Commands.DELETE, "ID", "3");
+                QueryResult testQueryResult3 = new QueryResult("DeleteSuccess", null, null);
+                KeyValuePair<Query, QueryResult> testDatum3 = new KeyValuePair<Query, QueryResult>(testQuery3, testQueryResult3);
+                yield return testDatum3;
+
+                Query testQuery4 = new Query(Commands.SAVE, "USERS.bin", string.Empty);
+                QueryResult testQueryResult4 = new QueryResult("SaveSuccess", null, null);
+                KeyValuePair<Query, QueryResult> testDatum4 = new KeyValuePair<Query, QueryResult>(testQuery4, testQueryResult4);
+                yield return testDatum4;
+
+                Query testQuery5 = new Query(Commands.LOAD, "USERS.bin", string.Empty);
+                QueryResult testQueryResult5 = new QueryResult("LoadSuccess", null, null);
+                KeyValuePair<Query, QueryResult> testDatum5 = new KeyValuePair<Query, QueryResult>(testQuery5, testQueryResult5);
+                yield return testDatum5;
+
+
+            }
+
+        }
 
     }
 }

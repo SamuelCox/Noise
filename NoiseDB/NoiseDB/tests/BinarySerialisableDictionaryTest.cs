@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System.Configuration;
 using System.IO;
-namespace NoiseDB
+
+namespace NoiseDB.Tests
 {
-    
+
     [TestFixture]
     public class BinarySerialisableDictionaryTest
     {

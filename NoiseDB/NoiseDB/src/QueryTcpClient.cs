@@ -1,19 +1,16 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace NoiseDB.src
+namespace NoiseDB
 {
-    public class QueryTcpClient
+    internal class QueryTcpClient : IQueryTcpClient
     {
         private TcpClient Client { get; set; }        
         private bool UseTls { get; set; }

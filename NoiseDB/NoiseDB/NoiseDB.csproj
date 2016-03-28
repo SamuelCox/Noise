@@ -88,25 +88,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\BinarySerialisableDictionary.cs" />
-    <Compile Include="src\LoggingService.cs" />
-    <Compile Include="src\QueryTcpClient.cs" />
-    <Compile Include="tests\BinarySerialisableDictionaryTest.cs" />
-    <Compile Include="src\Commands.cs" />
-    <Compile Include="src\QueryTcpServer.cs" />
-    <Compile Include="src\DataService.cs" />
-    <Compile Include="tests\DataServiceTest.cs" />
-    <Compile Include="src\IDataService.cs" />
-    <Compile Include="src\IQueryService.cs" />
-    <Compile Include="tests\MockDataService.cs" />
-    <Compile Include="src\Program.cs" />
+    <Compile Include="Src\BinarySerialisableDictionary.cs" />
+    <Compile Include="Src\IQueryTcpClient.cs" />
+    <Compile Include="Src\IQueryTcpServer.cs" />
+    <Compile Include="Src\LoggingService.cs" />
+    <Compile Include="Src\QueryTcpClient.cs" />
+    <Compile Include="Tests\BinarySerialisableDictionaryTest.cs" />
+    <Compile Include="Src\Commands.cs" />
+    <Compile Include="Src\QueryTcpServer.cs" />
+    <Compile Include="Src\DataService.cs" />
+    <Compile Include="Tests\DataServiceTest.cs" />
+    <Compile Include="Src\IDataService.cs" />
+    <Compile Include="Src\IQueryService.cs" />
+    <Compile Include="Tests\MockDataService.cs" />
+    <Compile Include="Src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Query.cs" />
-    <Compile Include="src\QueryResult.cs" />
-    <Compile Include="tests\QueryResultTest.cs" />
-    <Compile Include="src\QueryService.cs" />
-    <Compile Include="tests\QueryServiceTest.cs" />
-    <Compile Include="src\ServiceManager.cs" />
+    <Compile Include="Src\Query.cs" />
+    <Compile Include="Src\QueryResult.cs" />
+    <Compile Include="Tests\MockQueryTcpClient.cs" />
+    <Compile Include="Tests\MockQueryTcpServer.cs" />
+    <Compile Include="Tests\QueryResultTest.cs" />
+    <Compile Include="Src\QueryService.cs" />
+    <Compile Include="Tests\QueryServiceTest.cs" />
+    <Compile Include="Src\ServiceManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using Newtonsoft.Json;
-using NoiseDB.src;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Authentication;
@@ -16,10 +12,10 @@ using System.Configuration;
 
 namespace NoiseDB
 {
-    public class QueryTcpServer
+    internal class QueryTcpServer : IQueryTcpServer
     {
         private bool ServerStarted { get; set; }        
-        public QueryService QueryService { get; set; }
+        public IQueryService QueryService { get; set; }
         private bool UseTls { get; set; }
         
 
@@ -47,6 +43,11 @@ namespace NoiseDB
             }
 
 
+        }
+
+        public QueryResult StopListener()
+        {
+            return new QueryResult("Success", null, null);
         }
 
         private void ListenForAndProcessConnections(TcpListener listener)
