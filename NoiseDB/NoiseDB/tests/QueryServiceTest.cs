@@ -38,29 +38,21 @@ namespace NoiseDB.Tests
         [Test]
         public void TestExecuteQuery()
         {
-            QueryService queryService = new QueryService(new MockDataService(), new MockQueryTcpClient(),
-                                                         new MockQueryTcpServer());
-            List<KeyValuePair<Query, QueryResult>> queryTestData = GetExecute.ToList<KeyValuePair<Query, QueryResult>>();
+            
+            List<KeyValuePair<Query, QueryResult>> queryTestData = GetExecuteTestCases.ToList();
             foreach (KeyValuePair<Query, QueryResult> keyValuePair in queryTestData)
             {
+                QueryService queryService = new QueryService(new MockDataService(), new MockQueryTcpClient(),
+                                                         new MockQueryTcpServer());
+
                 QueryResult queryResult = queryService.ExecuteQuery(keyValuePair.Key);
                 Assert.AreEqual(keyValuePair.Value.ResultMessage, queryResult.ResultMessage);
             }
 
-        }        
-
-        public IEnumerable<Query> GetExecuteTestCases
-        {
-            get
-            {
-                yield return new Query(Commands.GET, "USERS:1000", string.Empty);
-                yield return new Query(Commands.SET, "PRODUCTS:100", "Visual Studio");
-                yield return new Query(Commands.DELETE, "PRODUCTS:100", string.Empty);
-            }
-        }
+        }             
 
 
-        public IEnumerable<KeyValuePair<Query, QueryResult>> GetExecute
+        public IEnumerable<KeyValuePair<Query, QueryResult>> GetExecuteTestCases
         {
             get
             {
@@ -88,6 +80,32 @@ namespace NoiseDB.Tests
                 QueryResult testQueryResult5 = new QueryResult("LoadSuccess", null, null);
                 KeyValuePair<Query, QueryResult> testDatum5 = new KeyValuePair<Query, QueryResult>(testQuery5, testQueryResult5);
                 yield return testDatum5;
+
+                Query testQuery6 = new Query(Commands.SERVER_CONNECT, "127.0.0.1", string.Empty);
+                QueryResult testQueryResult6 = new QueryResult("ConnectSuccess", null, null);
+                KeyValuePair<Query, QueryResult> testDatum6 = new KeyValuePair<Query, QueryResult>(testQuery6, testQueryResult6);
+                yield return testDatum6;
+
+                Query testQuery7 = new Query(Commands.SERVER_DISCONNECT, string.Empty, string.Empty);
+                QueryResult testQueryResult7 = new QueryResult("Success", null, null);
+                KeyValuePair<Query, QueryResult> testDatum7 = new KeyValuePair<Query, QueryResult>(testQuery7, testQueryResult7);
+                yield return testDatum7;
+
+                Query testQuery8 = new Query(Commands.SERVER_START, string.Empty, string.Empty);
+                QueryResult testQueryResult8 = new QueryResult("ListenSuccess", null, null);
+                KeyValuePair<Query, QueryResult> testDatum8 = new KeyValuePair<Query, QueryResult>(testQuery8, testQueryResult8);
+                yield return testDatum8;
+
+                Query testQuery9 = new Query(Commands.SERVER_STOP, string.Empty, string.Empty);
+                QueryResult testQueryResult9 = new QueryResult("StopListenSuccess", null, null);
+                KeyValuePair<Query, QueryResult> testDatum9 = new KeyValuePair<Query, QueryResult>(testQuery9, testQueryResult9);
+                yield return testDatum9;
+
+                Query testQuery10 = new Query(Commands.UNKNOWN, string.Empty, string.Empty);
+                QueryResult testQueryResult10 = new QueryResult("Unrecognised Command", null, null);
+                KeyValuePair<Query, QueryResult> testDatum10 = new KeyValuePair<Query, QueryResult>(testQuery10, testQueryResult10);
+                yield return testDatum10;
+
 
 
             }

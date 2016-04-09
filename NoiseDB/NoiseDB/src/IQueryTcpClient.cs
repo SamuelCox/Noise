@@ -1,9 +1,11 @@
-﻿namespace NoiseDB
+﻿using System.Threading.Tasks;
+
+namespace NoiseDB
 {
     internal interface IQueryTcpClient
     {
 
-        QueryResult Connect(string hostName);
+        Task<QueryResult> Connect(string hostName);
 
 
 

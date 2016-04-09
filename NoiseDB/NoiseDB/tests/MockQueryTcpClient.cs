@@ -1,10 +1,13 @@
-﻿namespace NoiseDB.Tests
+﻿using System.Threading.Tasks;
+
+namespace NoiseDB.Tests
 {
     internal class MockQueryTcpClient : IQueryTcpClient
     {
 
-        public QueryResult Connect(string hostName)
+        public async Task<QueryResult> Connect(string hostName)
         {
+            
             return new QueryResult("ConnectSuccess", null, null);        
         }
 

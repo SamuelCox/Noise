@@ -145,7 +145,7 @@ namespace NoiseDB
                 return new QueryResult("Failed", new ArgumentNullException(), null);
             }
             IsConnectedToNetworkDataStore = true;
-            return QueryTcpClient.Connect(query.Key);
+            return QueryTcpClient.Connect(query.Key).Result;
         }
 
         private QueryResult ServerDisconnect(Query query)

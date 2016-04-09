@@ -14,7 +14,7 @@ namespace NoiseDB.Tests
 
         
         [Test]
-        public void TestGetRow()
+        public void TestGetValue()
         {
             DataService dataService = new DataService();
             dataService.SetValue("TestKey", "TestValue");

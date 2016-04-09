@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NoiseDB
 {
@@ -22,7 +23,7 @@ namespace NoiseDB
             UseTls = bool.Parse(ConfigurationManager.AppSettings["UseTls"]);
         }
 
-        public QueryResult Connect(string hostName)
+        public async Task<QueryResult> Connect(string hostName)
         {
             ConnectedHostName = hostName;
             Client = new TcpClient(ConnectedHostName, 4044);
@@ -33,7 +34,7 @@ namespace NoiseDB
                 X509CertificateCollection clientCertificateCollection =
                     new X509CertificateCollection(new X509Certificate[] { clientCertificate });
                 ClientStream = new SslStream(Client.GetStream());
-                ((SslStream)ClientStream).AuthenticateAsClient(ConnectedHostName, clientCertificateCollection, SslProtocols.Tls12,true);
+                await ((SslStream)ClientStream).AuthenticateAsClientAsync(ConnectedHostName, clientCertificateCollection, SslProtocols.Tls12,true);
             }
             else
             {
