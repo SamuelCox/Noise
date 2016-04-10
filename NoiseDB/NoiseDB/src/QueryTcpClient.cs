@@ -17,10 +17,12 @@ namespace NoiseDB
         private bool UseTls { get; set; }
         private string ConnectedHostName { get; set; }
         private Stream ClientStream { get; set; }
+        private readonly int ByteArraySize;
 
-        public QueryTcpClient()
+        public QueryTcpClient(int byteArraySize)
         {
             UseTls = bool.Parse(ConfigurationManager.AppSettings["UseTls"]);
+            ByteArraySize = byteArraySize;
         }
 
         public async Task<QueryResult> Connect(string hostName)
@@ -33,6 +35,7 @@ namespace NoiseDB
                 X509Certificate2 clientCertificate = new X509Certificate2(clientTlsCertificatePath);
                 X509CertificateCollection clientCertificateCollection =
                     new X509CertificateCollection(new X509Certificate[] { clientCertificate });
+
                 ClientStream = new SslStream(Client.GetStream());
                 await ((SslStream)ClientStream).AuthenticateAsClientAsync(ConnectedHostName, clientCertificateCollection, SslProtocols.Tls12,true);
             }
@@ -46,14 +49,23 @@ namespace NoiseDB
 
         public QueryResult SendQueryAndReturnResult(Query query)
         {
-            Byte[] byteBuffer = new Byte[1024];
+            Byte[] byteBuffer = new Byte[ByteArraySize];
             string jsonSerializedQuery = JsonConvert.SerializeObject(query);
             byteBuffer = Encoding.ASCII.GetBytes(jsonSerializedQuery);
+
             int responseBytes;
             Byte[] responseByteBuffer;
             responseByteBuffer = WriteQueryToStreamAndReadResult(ClientStream, byteBuffer, out responseBytes);
-            string jsonDeserializedQueryResult = Encoding.ASCII.GetString(responseByteBuffer, 0, responseBytes);
-            QueryResult response = JsonConvert.DeserializeObject<QueryResult>(jsonDeserializedQueryResult);
+            string jsonSerializedQueryResult = Encoding.ASCII.GetString(responseByteBuffer, 0, responseBytes);
+            QueryResult response;
+            try
+            {
+                response = JsonConvert.DeserializeObject<QueryResult>(jsonSerializedQueryResult);
+            }
+            catch(JsonException e)
+            {
+                return new QueryResult("Failed", e, null);
+            }
             return response;
         }
 
@@ -61,7 +73,7 @@ namespace NoiseDB
         {
             stream.Write(queryByteArray, 0, queryByteArray.Length);
             stream.Flush();
-            byte[] responseByteBuffer = new Byte[1024];
+            byte[] responseByteBuffer = new Byte[ByteArraySize];
             responseBytes = stream.Read(responseByteBuffer, 0, responseByteBuffer.Length);
             return responseByteBuffer;
         }

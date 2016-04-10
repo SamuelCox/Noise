@@ -17,11 +17,13 @@ namespace NoiseDB
         private bool ServerStarted { get; set; }        
         public IQueryService QueryService { get; set; }
         private bool UseTls { get; set; }
-        
+        private readonly int ByteArraySize;
 
-        public QueryTcpServer()
+
+        public QueryTcpServer(int byteArraySize)
         {
             UseTls = bool.Parse(ConfigurationManager.AppSettings["UseTls"]);
+            ByteArraySize = byteArraySize;
         }
         
         
@@ -76,22 +78,40 @@ namespace NoiseDB
         private void ReceiveQueryAndSendResult(Stream stream)
         {
 
-            byte[] requestByteBuffer = new byte[1024];
-            byte[] responseByteBuffer = new byte[1024];
+            byte[] requestByteBuffer = new byte[ByteArraySize];
+            byte[] responseByteBuffer = new byte[ByteArraySize];
             using (stream)
             {
                 while (true)
                 {                    
                     int requestBytes = stream.Read(requestByteBuffer, 0, requestByteBuffer.Length);
                     string jsonSerializedQuery = Encoding.ASCII.GetString(requestByteBuffer, 0, requestBytes);
-                    Query query = JsonConvert.DeserializeObject<Query>(jsonSerializedQuery);
-                    QueryResult queryResult = QueryService.ExecuteQuery(query);
-                    string queryResultJson = JsonConvert.SerializeObject(queryResult);
-                    int responseByteBufferSize = Encoding.ASCII.GetByteCount(queryResultJson);
-                    responseByteBuffer = Encoding.ASCII.GetBytes(queryResultJson);
-                    stream.Write(responseByteBuffer, 0, responseByteBufferSize);
-                    stream.Flush();
-                    if (query.Command == Commands.SERVER_DISCONNECT)
+                    Query query = null;
+                    QueryResult queryResult;
+                    string queryResultJson = string.Empty;
+
+                    try
+                    {
+                        query = JsonConvert.DeserializeObject<Query>(jsonSerializedQuery);
+                        queryResult = QueryService.ExecuteQuery(query);
+                        queryResultJson = JsonConvert.SerializeObject(queryResult);
+                    }
+
+                    catch (JsonException e)
+                    {
+                        QueryResult errorQueryResult = new QueryResult("Failed", e, null);
+                        queryResultJson = JsonConvert.SerializeObject(errorQueryResult);
+                    }
+
+                    finally
+                    {
+                        int responseByteBufferSize = Encoding.ASCII.GetByteCount(queryResultJson);
+                        responseByteBuffer = Encoding.ASCII.GetBytes(queryResultJson);
+                        stream.Write(responseByteBuffer, 0, responseByteBufferSize);
+                        stream.Flush();
+                    }
+
+                    if (query?.Command == Commands.SERVER_DISCONNECT)
                     {
                         break;
                     }

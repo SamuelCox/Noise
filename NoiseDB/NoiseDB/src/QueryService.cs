@@ -13,10 +13,19 @@ namespace NoiseDB
         public QueryService()
         {
             DataService = new DataService();
-            QueryTcpClient = new QueryTcpClient();
-            QueryTcpServer =  new QueryTcpServer();
+            QueryTcpClient = new QueryTcpClient(1024);
+            QueryTcpServer =  new QueryTcpServer(1024);
             QueryTcpServer.QueryService = this;
             
+        }
+
+        public QueryService(int byteArraySizeForTcpQueries)
+        {
+            DataService = new DataService();
+            QueryTcpClient = new QueryTcpClient(byteArraySizeForTcpQueries);
+            QueryTcpServer = new QueryTcpServer(byteArraySizeForTcpQueries);
+            QueryTcpServer.QueryService = this;
+
         }
 
         internal QueryService(IDataService dataService, IQueryTcpClient queryTcpClient,
@@ -94,7 +103,7 @@ namespace NoiseDB
                     return LoadDataStore(query);
 
                 default:
-                    return new QueryResult("Unrecognised command", null, null);                
+                    return new QueryResult("Unrecognised Command", null, null);                
              }
 
             
@@ -135,7 +144,7 @@ namespace NoiseDB
 
         private QueryResult StopServer()
         {
-            return new QueryResult("NotImplemented", null, null);
+            return QueryTcpServer.StopListener();
         }
 
         private QueryResult ServerConnect(Query query)
