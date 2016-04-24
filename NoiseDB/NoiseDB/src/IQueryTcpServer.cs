@@ -5,8 +5,6 @@
         IQueryService QueryService { get; set; }
 
 
-
-
         QueryResult StartListener();
 
 

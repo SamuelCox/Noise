@@ -17,12 +17,11 @@ namespace NoiseDB
         private bool UseTls { get; set; }
         private string ConnectedHostName { get; set; }
         private Stream ClientStream { get; set; }
-        private readonly int ByteArraySize;
+        private readonly int ByteArraySize = int.Parse(ConfigurationManager.AppSettings["ByteArraySize"]);
 
-        public QueryTcpClient(int byteArraySize)
+        public QueryTcpClient()
         {
-            UseTls = bool.Parse(ConfigurationManager.AppSettings["UseTls"]);
-            ByteArraySize = byteArraySize;
+            UseTls = bool.Parse(ConfigurationManager.AppSettings["UseTls"]);            
         }
 
         public async Task<QueryResult> Connect(string hostName)
@@ -58,6 +57,7 @@ namespace NoiseDB
             responseByteBuffer = WriteQueryToStreamAndReadResult(ClientStream, byteBuffer, out responseBytes);
             string jsonSerializedQueryResult = Encoding.ASCII.GetString(responseByteBuffer, 0, responseBytes);
             QueryResult response;
+
             try
             {
                 response = JsonConvert.DeserializeObject<QueryResult>(jsonSerializedQueryResult);

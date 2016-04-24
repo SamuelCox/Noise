@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace NoiseDB
@@ -16,78 +17,75 @@ namespace NoiseDB
         public QueryResult GetValue(string key)
         {
 
-            string result;
-            QueryResult queryResult;
-            if(!string.IsNullOrEmpty(key) && KeyValueStore.ContainsKey(key))
+            string result = string.Empty;            
+            bool success = false;
+
+            if (KeyValueStore.ContainsKey(key))
             {
-               KeyValueStore.TryGetValue(key, out result);
+                success = KeyValueStore.TryGetValue(key, out result);
             }
-            else 
+            else
             {
                 return new QueryResult("Failed", new KeyNotFoundException(), null);
+            }
+            
+            if(success)
+            {
+                return new QueryResult("Success", null, result);
             }            
-            queryResult = new QueryResult("Success", null, result);
-            return queryResult;
+            else
+            {
+                return new QueryResult("Failed", null, null);
+            }
+            
         }
 
         public QueryResult SetValue(string key, string value)
-        {
-            if (!string.IsNullOrEmpty(key))
-            {
-                KeyValueStore.AddOrUpdate(key, value,
-                (updateKey, existingVal) =>
-                { 
-                    return value;
-                });
-                return new QueryResult("Success", null, null);
-            }
-            else 
-            {
-                return new QueryResult("Failed", new KeyNotFoundException(), null);
-            }
+        {            
+            KeyValueStore.AddOrUpdate(key, value,
+            (updateKey, existingVal) =>
+            { 
+                return value;
+            });
+            return new QueryResult("Success", null, null);                        
         }
 
         public QueryResult DeleteRow(string key)
         {
-            string result;
-            if (!string.IsNullOrEmpty(key))
-            {
-                KeyValueStore.TryRemove(key,out result);
-                return new QueryResult("Success", null, null);
-            }
-            else 
-            {
-                return new QueryResult("Failed", new KeyNotFoundException(), null);
-            }
+            string result;            
+            KeyValueStore.TryRemove(key,out result);
+            return new QueryResult("Success", null, null);                                        
         }
 
         public QueryResult SaveStore(string name)
         {
             string filePath = ConfigurationManager.AppSettings["DataStoreFilePath"] + name;
-            bool success = BinarySerializableDictionary<string, string>.Serialize(KeyValueStore, filePath);
-            if(success)
+            try
             {
+                BinarySerializableDictionary<string, string>.Serialize(KeyValueStore, filePath);
                 return new QueryResult("Success", null, null);
             }
-            else 
+            catch(Exception e)
             {
-                return new QueryResult("Failed", null, null);
-            }
+                return new QueryResult("Failed", e, null);
+            }                
+            
+            
         }
 
         public QueryResult LoadStore(string name)
         {
             string filePath = ConfigurationManager.AppSettings["DataStoreFilePath"] + name;
-            KeyValueStore = BinarySerializableDictionary<string, string>.Deserialize(filePath);
-            bool success = true;
-            if(success)
+            try
             {
+                KeyValueStore = BinarySerializableDictionary<string, string>.Deserialize(filePath);
                 return new QueryResult("Success", null, null);
             }
-            else
+            catch(Exception e)
             {
-                return new QueryResult("Failed", null, null);
-            }
+                return new QueryResult("Failed", e, null);
+            }  
+            
         }
 
        

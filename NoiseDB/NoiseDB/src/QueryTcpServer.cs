@@ -17,13 +17,13 @@ namespace NoiseDB
         private bool ServerStarted { get; set; }        
         public IQueryService QueryService { get; set; }
         private bool UseTls { get; set; }
-        private readonly int ByteArraySize;
+        private readonly int ByteArraySize = int.Parse(ConfigurationManager.AppSettings["ByteArraySize"]);
 
 
-        public QueryTcpServer(int byteArraySize)
+        public QueryTcpServer()
         {
             UseTls = bool.Parse(ConfigurationManager.AppSettings["UseTls"]);
-            ByteArraySize = byteArraySize;
+            
         }
         
         

@@ -13,20 +13,11 @@ namespace NoiseDB
         public QueryService()
         {
             DataService = new DataService();
-            QueryTcpClient = new QueryTcpClient(1024);
-            QueryTcpServer =  new QueryTcpServer(1024);
+            QueryTcpClient = new QueryTcpClient();
+            QueryTcpServer =  new QueryTcpServer();
             QueryTcpServer.QueryService = this;
             
-        }
-
-        public QueryService(int byteArraySizeForTcpQueries)
-        {
-            DataService = new DataService();
-            QueryTcpClient = new QueryTcpClient(byteArraySizeForTcpQueries);
-            QueryTcpServer = new QueryTcpServer(byteArraySizeForTcpQueries);
-            QueryTcpServer.QueryService = this;
-
-        }
+        }       
 
         internal QueryService(IDataService dataService, IQueryTcpClient queryTcpClient,
                                IQueryTcpServer queryTcpServer)

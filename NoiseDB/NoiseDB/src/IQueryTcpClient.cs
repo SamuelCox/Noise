@@ -7,9 +7,6 @@ namespace NoiseDB
 
         Task<QueryResult> Connect(string hostName);
 
-
-
-
         QueryResult SendQueryAndReturnResult(Query query);
 
 
