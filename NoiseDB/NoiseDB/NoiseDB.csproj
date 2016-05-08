@@ -94,22 +94,22 @@
     <Compile Include="Src\IQueryTcpServer.cs" />
     <Compile Include="Src\LoggingService.cs" />
     <Compile Include="Src\QueryTcpClient.cs" />
-    <Compile Include="Tests\BinarySerialisableDictionaryTest.cs" />
     <Compile Include="Src\Commands.cs" />
     <Compile Include="Src\QueryTcpServer.cs" />
     <Compile Include="Src\DataService.cs" />
-    <Compile Include="Tests\DataServiceTest.cs" />
     <Compile Include="Src\IDataService.cs" />
     <Compile Include="Src\IQueryService.cs" />
-    <Compile Include="Tests\MockDataService.cs" />
     <Compile Include="Src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Src\Query.cs" />
     <Compile Include="Src\QueryResult.cs" />
+    <Compile Include="Src\QueryService.cs" />
+    <Compile Include="Tests\BinarySerialisableDictionaryTest.cs" />
+    <Compile Include="Tests\DataServiceTest.cs" />
+    <Compile Include="Tests\MockDataService.cs" />
     <Compile Include="Tests\MockQueryTcpClient.cs" />
     <Compile Include="Tests\MockQueryTcpServer.cs" />
     <Compile Include="Tests\QueryResultTest.cs" />
-    <Compile Include="Src\QueryService.cs" />
     <Compile Include="Tests\QueryServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +136,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -35,8 +35,7 @@ namespace NoiseDB
                     }
                 }
                 else 
-                {
-                    File.Create(directoryPath + @"\" + currentDay.ToString(DATE_FORMAT) + ".txt");
+                {                                        
                     using (StreamWriter fileWriter = new StreamWriter(directoryPath + @"\" + currentDay.ToString(DATE_FORMAT) + ".txt", false))
                     {
                         fileWriter.WriteLine(queryLogString);

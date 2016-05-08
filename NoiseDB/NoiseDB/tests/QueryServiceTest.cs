@@ -12,24 +12,19 @@ namespace NoiseDB.Tests
 
         }
 
-        [TestCase("GET,USERS:1000")]
-        [TestCase("SET,PRODUCTS:100:NAME,Visual Studio ")]
-        [TestCase("DELETE,USERS:1000")]
+        
         [Test]
-        public void TestConstructQuery(string testQuery)
+        public void TestConstructQuery()
         {
             QueryService queryService = new QueryService();
-            Query query = queryService.ConstructQuery(testQuery);
-            string[] queryParts = testQuery.Split(',');
-            Assert.AreEqual(query.Command.ToString(), queryParts[0]);
-            if (queryParts.Count() > 1)
+            foreach(KeyValuePair<string, Query> kvp in GetConstructTestCases)
             {
-                Assert.AreEqual(query.Key, queryParts[1]);
+                Query query = queryService.ConstructQuery(kvp.Key);
+                Assert.AreEqual(kvp.Value.Command, query.Command);
+                Assert.AreEqual(kvp.Value.Argument, query.Argument);
+                Assert.AreEqual(kvp.Value.Key, query.Key);
             }
-            if(queryParts.Count() > 2)
-            {
-                Assert.AreEqual(query.Argument, queryParts[2]);
-            }
+            
             
             
         }
@@ -49,8 +44,23 @@ namespace NoiseDB.Tests
                 Assert.AreEqual(keyValuePair.Value.ResultMessage, queryResult.ResultMessage);
             }
 
-        }             
+        }
 
+        public IEnumerable<KeyValuePair<string, Query>> GetConstructTestCases
+        {
+            get
+            {
+                yield return new KeyValuePair<string, Query>(@"GET ""X""", new Query(Commands.GET, "X", string.Empty));
+
+                yield return new KeyValuePair<string, Query>(@"SET ""X"" ""Y""", new Query(Commands.SET, "X", "Y"));
+
+                yield return new KeyValuePair<string, Query>(@"SET ""X X X"" ""Y Y Y""" , new Query(Commands.SET, "X X X", "Y Y Y"));
+
+                yield return new KeyValuePair<string, Query>(@"SERVER_CONNECT ""127.0.0.1""", new Query(Commands.SERVER_CONNECT, "127.0.0.1", string.Empty));
+
+
+            }
+        }
 
         public IEnumerable<KeyValuePair<Query, QueryResult>> GetExecuteTestCases
         {

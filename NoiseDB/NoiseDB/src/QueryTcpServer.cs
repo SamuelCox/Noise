@@ -24,9 +24,7 @@ namespace NoiseDB
         {
             UseTls = bool.Parse(ConfigurationManager.AppSettings["UseTls"]);
             
-        }
-        
-        
+        }                
 
         public QueryResult StartListener()
         {

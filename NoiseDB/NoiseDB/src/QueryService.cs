@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 
 namespace NoiseDB
 {
@@ -31,26 +32,31 @@ namespace NoiseDB
 
         public Query ConstructQuery(string queryString)
         {
-            string[] query = queryString.Split(',');
+            if (string.IsNullOrEmpty(queryString))
+            {
+                return new Query(Commands.UNKNOWN, null, null);
+            }
+            string[] query = queryString.Split('"');
             Commands queryCommand = Commands.UNKNOWN;
             Enum.TryParse<Commands>(query[0], true, out queryCommand);
             string queryKey = query.Count() > 1 ? query[1] : null;
             string argument = string.Empty;
-            if(queryCommand == Commands.SET)
+            if (queryCommand == Commands.SET)
             {
-                if (query.Count() == 3)
+                if (query.Count() > 4)
                 {
-                    argument = query[2];
+                    argument = query[3];
                 }
             }
             
             return new Query(queryCommand, queryKey, argument);  
         }
+        
 
         public QueryResult ExecuteQuery(Query query)
         {
             
-            if(IsConnectedToNetworkDataStore)
+            if (IsConnectedToNetworkDataStore)
             {
                 LoggingService.LogToDisk(query);
                 if (query.Command == Commands.SERVER_DISCONNECT)
@@ -62,7 +68,7 @@ namespace NoiseDB
            
             LoggingService.LogToDisk(query,IsConnectedToNetworkDataStore);
             
-            switch(query.Command)
+            switch (query.Command)
             {
                 case Commands.GET:
                     return GetValue(query);
@@ -104,7 +110,7 @@ namespace NoiseDB
         {
             if (string.IsNullOrEmpty(query.Key))
             {
-                return new QueryResult("Failed", new ArgumentNullException(), null);
+                return new QueryResult("Failed", new ArgumentNullException(nameof(query.Key)), null);
             }
             return DataService.GetValue(query.Key);
         }
@@ -123,7 +129,7 @@ namespace NoiseDB
         {
             if (string.IsNullOrEmpty(query.Key))
             {
-                return new QueryResult("Failed", new ArgumentNullException(), null);
+                return new QueryResult("Failed", new ArgumentNullException(nameof(query.Key)), null);
             }
             return DataService.DeleteRow(query.Key);
         }
@@ -142,7 +148,7 @@ namespace NoiseDB
         {
             if (string.IsNullOrEmpty(query.Key))
             {
-                return new QueryResult("Failed", new ArgumentNullException(), null);
+                return new QueryResult("Failed", new ArgumentNullException(nameof(query.Key)), null);
             }
             IsConnectedToNetworkDataStore = true;
             return QueryTcpClient.Connect(query.Key).Result;
@@ -158,7 +164,7 @@ namespace NoiseDB
         {
             if (string.IsNullOrEmpty(query.Key))
             {
-                return new QueryResult("Failed", new ArgumentNullException(), null);
+                return new QueryResult("Failed", new ArgumentNullException(nameof(query.Key)), null);
             }
             return DataService.SaveStore(query.Key);
         }
@@ -167,7 +173,7 @@ namespace NoiseDB
         {
             if (string.IsNullOrEmpty(query.Key))
             {
-                return new QueryResult("Failed", new ArgumentNullException(), null);
+                return new QueryResult("Failed", new ArgumentNullException(nameof(query.Key)), null);
             }
             return DataService.LoadStore(query.Key);
         }
