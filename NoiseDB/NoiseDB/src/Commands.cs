@@ -1,5 +1,10 @@
 ﻿namespace NoiseDB
 {
+    /// <summary>
+    /// An enum that represents all commands in the system,
+    /// if the command doesn't explicitly exist it will 
+    /// be UNKNOWN. 
+    /// </summary>
     public enum Commands
     {
         UNKNOWN = 0,

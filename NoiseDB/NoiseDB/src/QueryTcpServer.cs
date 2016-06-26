@@ -9,32 +9,52 @@ using System.Security.Cryptography.X509Certificates;
 using System.Security.Authentication;
 using System.IO;
 using System.Configuration;
+using System;
 
 namespace NoiseDB
 {
+    /// <summary>
+    /// A class that deals with being the NoiseDB server,
+    /// that receives queries over the network, executes them,
+    /// then sends the results over the network.
+    /// </summary>
     internal class QueryTcpServer : IQueryTcpServer
     {
-        private bool ServerStarted { get; set; }        
+        //Whether the server is running.
+        private bool ServerStarted { get; set; }
+        //The QueryService to use to execute the Queries.        
         public IQueryService QueryService { get; set; }
-        private bool UseTls { get; set; }
+        //Whether to use a connection encrypted over Tls.
+        private bool UseTls { get; set; } = bool.Parse(ConfigurationManager.AppSettings["UseTls"]);
+        //The size of the byte arrays to use for sending data over the network.
         private readonly int ByteArraySize = int.Parse(ConfigurationManager.AppSettings["ByteArraySize"]);
+        //The underlying TcpListener the server uses.
+        private TcpListener Listener { get; set; }
 
-
+        /// <summary>
+        /// An empty constructor.
+        /// </summary>
         public QueryTcpServer()
-        {
-            UseTls = bool.Parse(ConfigurationManager.AppSettings["UseTls"]);
+        {            
             
         }                
 
+        /// <summary>
+        /// A method that starts the TcpListener,
+        /// listening on the machine the server is running on, 
+        /// on port 4044.
+        /// </summary>
+        /// <returns>A queryresult on whether the operation succeeded
+        /// or not.</returns>
         public QueryResult StartListener()
         {
             if (!ServerStarted)
             {
                 IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
-                TcpListener listener = new TcpListener(ipAddress, 4044);
-                listener.Start();
+                Listener = new TcpListener(ipAddress, 4044);
+                Listener.Start();
                 ServerStarted = true;
-                new Task(() => ListenForAndProcessConnections(listener)).Start();
+                new Task(() => ListenForAndProcessConnections()).Start();
                 return new QueryResult("Success", null, null);
             }
             else
@@ -45,18 +65,42 @@ namespace NoiseDB
 
         }
 
+        /// <summary>
+        /// A method that stops the TcpListener.
+        /// </summary>
+        /// <returns></returns>
         public QueryResult StopListener()
         {
+            ServerStarted = false;
+            Listener.Stop();
             return new QueryResult("Success", null, null);
         }
 
-        private void ListenForAndProcessConnections(TcpListener listener)
+        /// <summary>
+        /// A method that constantly loops,
+        /// listens for incoming Tcp connections
+        /// over the Listener, accepts them, and
+        /// then spins off a new Task to process
+        /// that connection.
+        /// </summary>
+        /// <param name="listener">
+        /// The Listener to check for incoming connections over.
+        /// </param>
+        private void ListenForAndProcessConnections()
         {
             while (true)
             {
-
+                TcpClient tcpClient;
                 Thread.Sleep(10);
-                TcpClient tcpClient = listener.AcceptTcpClient();
+                try
+                {
+                    tcpClient = Listener.AcceptTcpClient();
+                }
+                catch(Exception e)
+                {
+                    System.Diagnostics.EventLog.WriteEntry("Application", e.ToString());
+                    break;
+                }
                 NetworkStream stream = tcpClient.GetStream();
                 if (UseTls)
                 {
@@ -73,6 +117,15 @@ namespace NoiseDB
             }
         }
 
+        /// <summary>
+        /// A method that receives a Query over the network,
+        /// passes it to the QueryService to execute it,
+        /// and then serialises the result of that execution
+        /// and sends it back over the network to the 
+        /// client that sent it.
+        /// </summary>
+        /// <param name="stream">The stream to read queries off of,
+        /// and to send queryresults back over.</param>
         private void ReceiveQueryAndSendResult(Stream stream)
         {
 

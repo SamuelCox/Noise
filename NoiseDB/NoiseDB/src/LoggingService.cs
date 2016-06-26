@@ -4,12 +4,23 @@ using System.IO;
 
 namespace NoiseDB
 {
+    /// <summary>
+    /// A simple static class that handles logging transactions to log files.
+    /// </summary>
     internal static class LoggingService
     {
         public const string DATE_FORMAT = "yyyy-MM-dd";
         
 
-        internal static void LogToDisk(Query query, bool remoteQuery = false)
+        /// <summary>
+        /// A method that takes a Query, and writes a log of that Query and when it was
+        /// executed to a file on disk. All Queries executed on a given day are written
+        /// to a file with that date as the filename. There's not a massive amount
+        /// of complex logic here, just StreamWriters.
+        /// </summary>
+        /// <param name="query">The Query object to log.</param>
+        /// <param name="remoteQuery">Whether or not this was a query processed on the server.</param>
+        internal static void LogToDisk(Query query, bool remoteQuery)
         {
             string directoryPath = ConfigurationManager.AppSettings["LoggingDirectory"];
             string queryLogString;

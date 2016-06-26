@@ -19,7 +19,7 @@
         }
 
 
-        public QueryResult DeleteRow(string key)
+        public QueryResult DeleteValue(string key)
         {
             return new QueryResult("DeleteSuccess", null, null);
         }

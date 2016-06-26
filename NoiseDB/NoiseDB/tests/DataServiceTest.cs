@@ -30,11 +30,11 @@ namespace NoiseDB.Tests
         }
 
         [Test]
-        public void TestDeleteRow()
+        public void TestDeleteValue()
         {
             DataService dataService = new DataService();
             dataService.SetValue("TestKey", "TestValue");
-            dataService.DeleteRow("TestKey");
+            dataService.DeleteValue("TestKey");
             Assert.IsInstanceOf(typeof(KeyNotFoundException), dataService.GetValue("TestKey").ThrownException);
         }
         

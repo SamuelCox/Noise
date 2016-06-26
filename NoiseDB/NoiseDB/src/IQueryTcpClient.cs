@@ -2,6 +2,11 @@
 
 namespace NoiseDB
 {
+    /// <summary>
+    /// An interface that exposes the contract
+    /// all implementations of QueryTcpClients must conform
+    /// to.
+    /// </summary>
     internal interface IQueryTcpClient
     {
 

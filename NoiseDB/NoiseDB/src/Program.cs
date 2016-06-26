@@ -2,6 +2,13 @@
 
 namespace NoiseDB
 {
+    /// <summary>
+    /// The Entry-point of both the server
+    /// and client NoiseDB application.
+    /// This instantiates all services the
+    /// app needs, and takes input from the command
+    /// line and executes that input.
+    /// </summary>
     class Program
     {
         static void Main(string[] args)

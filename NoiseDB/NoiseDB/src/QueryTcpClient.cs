@@ -11,19 +11,39 @@ using System.Threading.Tasks;
 
 namespace NoiseDB
 {
+    /// <summary>
+    /// A class that deals with connecting
+    /// to a NoiseDB server, and sending queries 
+    /// to that server.
+    /// </summary>
     internal class QueryTcpClient : IQueryTcpClient
     {
-        private TcpClient Client { get; set; }        
-        private bool UseTls { get; set; }
+        //The underlying TcpClient to use.
+        private TcpClient Client { get; set; }
+        //Whether or not to use Tls encrypted connections.        
+        private bool UseTls { get; set; } = bool.Parse(ConfigurationManager.AppSettings["UseTls"]);
+        //The hostname of the server to connect to.
         private string ConnectedHostName { get; set; }
+        //The underlying networkstream to use for the server.
         private Stream ClientStream { get; set; }
+        //The size of the ByteArrays to use to transfer data over the network. Will heavily affect performance.
         private readonly int ByteArraySize = int.Parse(ConfigurationManager.AppSettings["ByteArraySize"]);
 
+        /// <summary>
+        /// An empty constructor.
+        /// </summary>
         public QueryTcpClient()
         {
-            UseTls = bool.Parse(ConfigurationManager.AppSettings["UseTls"]);            
+                        
         }
 
+        /// <summary>
+        /// A method that takes a hostname,
+        /// and connects to a NoiseDB server
+        /// running on that hostname.
+        /// </summary>
+        /// <param name="hostName">The hostname to connect to.</param>
+        /// <returns></returns>
         public async Task<QueryResult> Connect(string hostName)
         {
             ConnectedHostName = hostName;
@@ -45,7 +65,16 @@ namespace NoiseDB
             return new QueryResult("Success", null, null);
         }
 
-
+        /// <summary>
+        /// A method that takes a Query, sends that Query
+        /// to the NoiseDB server you're connected to,
+        /// waits to receive the QueryResult of executing
+        /// that Query, and returns it.
+        /// </summary>
+        /// <param name="query">The Query to execute on the server.</param>
+        /// <returns>
+        /// The QueryResult of the executed Query.
+        /// </returns>
         public QueryResult SendQueryAndReturnResult(Query query)
         {
             Byte[] byteBuffer = new Byte[ByteArraySize];
@@ -69,6 +98,16 @@ namespace NoiseDB
             return response;
         }
 
+        /// <summary>
+        /// A method that writes a Query to a networkstream,
+        /// and sends it over the network. It then reads the
+        /// response from that stream, and returns it.
+        /// </summary>
+        /// <param name="stream">The Stream the network
+        /// communication is happening over.</param>
+        /// <param name="queryByteArray">The byte array the serialised Query is stored in.</param>
+        /// <param name="responseBytes">The number of Bytes to read from the Stream.</param>
+        /// <returns></returns>
         private byte[] WriteQueryToStreamAndReadResult(Stream stream, Byte[] queryByteArray, out int responseBytes)
         {
             stream.Write(queryByteArray, 0, queryByteArray.Length);

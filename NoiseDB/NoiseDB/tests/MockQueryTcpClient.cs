@@ -6,8 +6,7 @@ namespace NoiseDB.Tests
     {
 
         public async Task<QueryResult> Connect(string hostName)
-        {
-            
+        {            
             return new QueryResult("ConnectSuccess", null, null);        
         }
 
