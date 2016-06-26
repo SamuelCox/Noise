@@ -5,7 +5,8 @@ To use this DBMS, you can go to [samuelcox.me/Noise.html](http://samuelcox.me/No
 download the version you need from there. There is a class library to operate with a Noise
 server running on some machine, and a command line client/server.
 
-Noise supports a few commands:
+Noise supports a few commands, please not all keys and values must be delimited
+by speech marks "":
 
 ### Set Key Value
 This stores a value against the key specified. If you are connected to a 
