@@ -1,7 +1,7 @@
 # Noise
 A naive Key-Value store DBMS, built in C#.
 ## Getting Started
-To use this DBMS, you can go to [samuelcox.me/Noise.html](samuelcox.me/Noise.html) and
+To use this DBMS, you can go to [samuelcox.me/Noise.html](http://samuelcox.me/Noise.html) and
 download the version you need from there. There is a class library to operate with a Noise
 server running on some machine, and a command line client/server.
 
