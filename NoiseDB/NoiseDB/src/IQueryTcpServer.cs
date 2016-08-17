@@ -9,7 +9,7 @@
     {
         IQueryService QueryService { get; set; }
 
-        QueryResult StartListener();
+        QueryResult StartListener(string ipToListen);
 
         QueryResult StopListener();
 

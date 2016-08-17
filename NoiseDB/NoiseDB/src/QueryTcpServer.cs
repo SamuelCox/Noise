@@ -46,11 +46,11 @@ namespace NoiseDB
         /// </summary>
         /// <returns>A queryresult on whether the operation succeeded
         /// or not.</returns>
-        public QueryResult StartListener()
+        public QueryResult StartListener(string ipToListen)
         {
             if (!ServerStarted)
             {
-                IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
+                IPAddress ipAddress = IPAddress.Parse(ipToListen);
                 Listener = new TcpListener(ipAddress, 4044);
                 Listener.Start();
                 ServerStarted = true;

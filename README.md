@@ -5,6 +5,11 @@ To use this DBMS, you can go to [samuelcox.me/Noise.html](http://samuelcox.me/No
 download the version you need from there. There is a class library to operate with a Noise
 server running on some machine, and a command line client/server.
 
+This program / class lib requires .net 4.6 or higher. I will eventually
+work to bring it to .net core.
+
+For network connections, port 4044 is required so this port must be allowed.
+
 Noise supports a few commands, please not all keys and values must be delimited
 by speech marks "":
 
@@ -30,8 +35,8 @@ specified by the key.
 This disconnects from any server you are connected to.
 
 ### Server_Start
-This starts a Noise server running on the machine
-the command line client.server is running from.
+This starts a Noise server running on the ip supplied
+as the key to this command.
 
 ### Server_Stop
 If the server is running, then this stops the server.

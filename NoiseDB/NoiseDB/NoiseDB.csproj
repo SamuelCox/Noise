@@ -107,6 +107,13 @@
     <Compile Include="Src\Query.cs" />
     <Compile Include="Src\QueryResult.cs" />
     <Compile Include="Src\QueryService.cs" />
+    <Compile Include="Tests\BinarySerialisableDictionaryTest.cs" />
+    <Compile Include="Tests\DataServiceTest.cs" />
+    <Compile Include="Tests\MockDataService.cs" />
+    <Compile Include="Tests\MockQueryTcpClient.cs" />
+    <Compile Include="Tests\MockQueryTcpServer.cs" />
+    <Compile Include="Tests\QueryResultTest.cs" />
+    <Compile Include="Tests\QueryServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

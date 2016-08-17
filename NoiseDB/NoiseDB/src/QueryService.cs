@@ -108,7 +108,7 @@ namespace NoiseDB
                     return DeleteValue(query);
 
                 case Commands.SERVER_START:
-                    return StartServer();
+                    return StartServer(query);
                     
 
                 case Commands.SERVER_STOP:
@@ -181,9 +181,9 @@ namespace NoiseDB
         /// 
         /// </summary>
         /// <returns></returns>
-        private QueryResult StartServer()
+        private QueryResult StartServer(Query query)
         {
-            return QueryTcpServer.StartListener();
+            return QueryTcpServer.StartListener(query.Key);
         }
 
         /// <summary>
@@ -202,12 +202,21 @@ namespace NoiseDB
         /// <returns></returns>
         private QueryResult ServerConnect(Query query)
         {
-            if (string.IsNullOrEmpty(query.Key))
+            try
             {
-                return new QueryResult("Failed", new ArgumentNullException(nameof(query.Key)), null);
+                if (string.IsNullOrEmpty(query.Key))
+                {
+                    return new QueryResult("Failed", new ArgumentNullException(nameof(query.Key)), null);
+                }
+
+
+                IsConnectedToNetworkDataStore = true;
+                return QueryTcpClient.Connect(query.Key).Result;
             }
-            IsConnectedToNetworkDataStore = true;
-            return QueryTcpClient.Connect(query.Key).Result;
+            catch(Exception e)
+            {
+                return null;
+            }
         }
 
         /// <summary>

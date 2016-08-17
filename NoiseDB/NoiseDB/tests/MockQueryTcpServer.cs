@@ -9,7 +9,7 @@
             
         }
 
-        public QueryResult StartListener()
+        public QueryResult StartListener(string ipToListen)
         {
             return new QueryResult("ListenSuccess", null, null);
         }
